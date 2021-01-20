@@ -1,5 +1,6 @@
 ## Stock 앱 개선 프로젝트
 - https://github.com/dkhamsing/stocks 의 stock app 문제점을 파악하고 개선하는 작업을 진행 합니다.
+- 리팩토링: [구조파악](https://github.com/sangbeomLee/stock/wiki/Stock-App-리팩토링:-구조파악)
 
 ## My Stocks
 
