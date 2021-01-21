@@ -171,7 +171,7 @@ private extension Finnhub.Quote {
 
 private extension Finnhub {
 
-    static let apiKey = "GET API KEY"
+    static let apiKey = APIKey.key
 
     static let host = "finnhub.io"
     static let baseUrl = "/api/v1"
@@ -239,7 +239,7 @@ private extension Finnhub {
 
 }
 
-private extension Finnhub {
+extension Finnhub {
     static func dividendUrl(_ symbol: String?) -> URL? {
         return url(path: Endpoint.dividend.path, symbol: symbol, numberOfDays: 365)
     }

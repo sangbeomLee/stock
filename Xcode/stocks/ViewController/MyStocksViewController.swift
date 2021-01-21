@@ -15,6 +15,8 @@ class MyStocksViewController: UIViewController {
     @IBOutlet var addButton: UIButton!
     private let refreshControl = UIRefreshControl()
     private var updateLabel = UpdateLabel()
+    
+    private let networkManager = StockNetworkManager.shared
 
     @IBAction func addButtonTapped(_ sender: Any) {
         addStock()
@@ -193,6 +195,21 @@ private extension MyStocksViewController {
 
         var stocksData: [String:MyQuote] = [:]
         let group = DispatchGroup()
+        
+        let symbols = list.compactMap { $0.symbol }
+        
+        networkManager.getQuotes(with: symbols) { results in
+            print(results.count)
+            results.forEach { result in
+                switch result {
+                case .success(let quote): break
+                    
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
+
         for item in list {
             group.enter()
             self.provider.getQuote(item.symbol) { (m) in
@@ -213,7 +230,6 @@ private extension MyStocksViewController {
                     items.append(item)
                 }
             }
-
             completion(items)
         }
     }
