@@ -81,12 +81,10 @@
 			isa = PBXGroup;
 			children = (
 				654B8C94248057EC003A6024 /* Info.plist */,
-				654B8C9A248058B0003A6024 /* AddStockViewController.swift */,
+				D3EA566025B9ACC700305E6B /* ViewController */,
 				654B8C86248057EA003A6024 /* AppDelegate.swift */,
-				654B8CA924807D5E003A6024 /* DetailViewController.swift */,
 				65CF81982482CD0C00CE0C77 /* Extension.swift */,
 				654B8CAD2480ABCF003A6024 /* Item.swift */,
-				654B8C8A248057EA003A6024 /* MyStocksViewController.swift */,
 				654B8C88248057EA003A6024 /* SceneDelegate.swift */,
 				65CF819424820A6200CE0C77 /* Theme.swift */,
 				654B8CA0248058B0003A6024 /* UpdateLabel.swift */,
@@ -109,6 +107,16 @@
 				654B8C9C248058B0003A6024 /* Tiingo.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		D3EA566025B9ACC700305E6B /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				654B8C9A248058B0003A6024 /* AddStockViewController.swift */,
+				654B8CA924807D5E003A6024 /* DetailViewController.swift */,
+				654B8C8A248057EA003A6024 /* MyStocksViewController.swift */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
