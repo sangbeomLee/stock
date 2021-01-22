@@ -138,18 +138,6 @@ extension Finnhub {
         }
     }
 
-    static func getQuote(_ symbol: String, completion: @escaping (MyQuote?) -> Void) {
-        let url = quoteUrl(symbol)
-        url?.get { (quote: Finnhub.Quote?) in
-            guard let finnQuote = quote else {
-                completion(nil)
-                return
-            }
-
-            completion(finnQuote.quote)
-        }
-    }
-
     static func getSearchResults(_ query: String, completion: @escaping ([Finnhub.Symbol]?) -> Void) {
         let url = symbolUrl()
         url?.get { (results: [Finnhub.Symbol]?) in

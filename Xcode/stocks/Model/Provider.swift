@@ -39,21 +39,6 @@ enum Provider: String {
         }
     }
 
-    func getQuote(_ symbol: String?, completion: @escaping (MyQuote?) -> Void) {
-        guard let symbol = symbol else {
-            completion(nil)
-            return
-        }
-
-        switch self {
-        case .finnhub:
-            let validSymbol = symbol.replacingOccurrences(of: "-", with: ".")
-            Finnhub.getQuote(validSymbol) { (m) in
-                completion(m)
-            }
-        }
-    }
-
     func search(_ query: String, completion: @escaping ([AddItem]?) -> Void) {
         switch self {
         case .finnhub:

@@ -47,7 +47,7 @@ class MyStocksViewController: UIViewController {
         setup()
         loadList()
         updateNavBar()
-        setupData()
+        setStockData()
     }
 
 }
@@ -70,7 +70,8 @@ private extension MyStocksViewController {
 
     func setup() {
         tableView.addSubview(refreshControl)
-        refreshControl.addTarget(self, action: #selector(updateStockData), for: .valueChanged)
+        tableView.tableFooterView = self.footerView
+        refreshControl.addTarget(self, action: #selector(setStockData), for: .valueChanged)
 
         let interval: TimeInterval = 60
         Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { (_:Timer)->Void in
@@ -94,12 +95,10 @@ private extension MyStocksViewController {
                 [addButton] : [editButton, addButton]
         }
     }
-
 }
 
+@objc
 private extension MyStocksViewController {
-
-    @objc
     func addStock() {
         let s = AddStockViewController()
         s.modalPresentationStyle = .formSheet
@@ -113,84 +112,13 @@ private extension MyStocksViewController {
         present(n, animated: true, completion: nil)
     }
 
-    @objc
     func editStocks() {
         let isEditing = !tableView.isEditing
         updateNavBar(isEditing)
         tableView.setEditing(isEditing, animated: true)
     }
-
-//    @objc
-//    func fetchStockDatawip() {
-//        guard let list = dataSource.first?.items else { return }
-//
-//
-//        let symbols = list.compactMap { $0.symbol }
-//        print(symbols)
-//
-//        let urls = symbols.map { Finnhub.quoteUrl($0) }
-//
-//        URL.get(urls) { o in
-//            print(o)
-//
-//            var items: [Item] = []
-//
-//            for data in o {
-//                let decoder = JSONDecoder()
-//                if let decoded = try? decoder.decode(Finnhub.Quote.self, from: data) {
-//                    print(decoded)
-//
-//                    let item = Item(symbol: "", quote: decoded.quote)
-//                    items.append(item)
-//
-//                }
-//            }
-//
-//
-//
-//            // update my saved stocks
-//                       var s = MyStocks()
-//                       s.save(items)
-//
-//                       // update ui
-//                       self.refreshControl.endRefreshing()
-//                       self.dataSource = self.makeDataSource(items: items, sort: self.sort)
-//                       self.loadList()
-//
-//                       let foot = self.footerView
-//                       foot.date = Date()
-//                       foot.update()
-//                       self.tableView.tableFooterView = foot
-//
-//
-//        }
-//
-//    }
-
-    @objc
-    func updateStockData() {
-        // TODO: while fetching stock data, prevent list changes (delete)
-        fetchStockData { (items) in
-            // update my saved stocks
-            var s = MyStocks()
-            s.save(items)
-
-            // update ui
-            self.refreshControl.endRefreshing()
-            self.dataSource = self.makeDataSource(items: items, sort: self.sort)
-            self.loadList()
-
-            if self.tableView.tableFooterView == nil {
-                self.tableView.tableFooterView = self.footerView
-            }
-
-            self.updateLabel.date = Date()
-            self.updateLabel.update()
-        }
-
-    }
     
-    func setupData() {
+    func setStockData() {
         guard let list = dataSource.first?.items else { return }
         
         let symbols = list.compactMap { $0.symbol }
@@ -221,10 +149,6 @@ private extension MyStocksViewController {
                 self.dataSource = self.makeDataSource(items: items, sort: self.sort)
                 self.loadList()
 
-                if self.tableView.tableFooterView == nil {
-                    self.tableView.tableFooterView = self.footerView
-                }
-
                 self.updateLabel.date = Date()
                 self.updateLabel.update()
             }
@@ -232,40 +156,6 @@ private extension MyStocksViewController {
         
     }
 
-    func fetchStockData(completion: @escaping ([Item]) -> Void) {
-        print("11")
-        guard let list = dataSource.first?.items else { return }
-
-        var stocksData: [String:MyQuote] = [:]
-        let group = DispatchGroup()
-        
-       
-        
-        for item in list {
-            group.enter()
-            self.provider.getQuote(item.symbol) { (m) in
-                if let symbol = item.symbol {
-                    stocksData[symbol] = m
-                }
-                group.leave()
-            }
-        }
-
-        group.notify(queue: .main) {
-            var items: [Item] = []
-
-            for item in list {
-                if let symbol = item.symbol {
-                    let value = stocksData[symbol]
-                    let item = Item(symbol: symbol, quote: value)
-                    items.append(item)
-                }
-            }
-            completion(items)
-        }
-    }
-
-    @objc
     func sortList() {
         switch sort {
         case .symbol:
@@ -439,7 +329,7 @@ extension MyStocksViewController: SelectStock {
 
         loadList()
         updateNavBar()
-        updateStockData()
+        setStockData()
     }
 
 }
