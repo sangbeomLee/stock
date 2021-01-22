@@ -13,6 +13,7 @@ enum NetworkError: Error {
     case parseJson
 }
 
+// TODO: - Fetch naming 고려해보기
 class StockNetworkManager {
     typealias FetchResult<T> = Result<T, Error>
     
@@ -24,15 +25,21 @@ class StockNetworkManager {
         self.downloader = downloader
     }
     
-    func getQuotes(with symbols: [String], completion: @escaping (([FetchResult<Finnhub.Quote>]) -> Void)) {
-        var results = [FetchResult<Finnhub.Quote>]()
+    // TODO: - fetch 를 사용해서 모든 것을 다 할 수 있게 하자.
+    func fetch<T: Codable>(dataType: T.Type, for symbols: [String], completion: @escaping ([(String, FetchResult<T>)]) -> Void) {
+        getFetchData(for: symbols, completion: completion)
+    }
+    
+    
+    func getFetchData<T: Codable>(for symbols: [String], completion: @escaping ([(String, FetchResult<T>)]) -> Void) {
+        var results = [(String, FetchResult<T>)]()
         // TODO: - 좀더 여기에 알맞는 네이밍 고려해보기
         let dispatchGroup = DispatchGroup()
         
-        symbols.forEach { symbol in
+        symbols.forEach {[weak self] symbol in
             dispatchGroup.enter()
-            self.getQuote(with: symbol) { (result: FetchResult<Finnhub.Quote>) in
-                results.append(result)
+            self?.downloadData(for: symbol) { (result: FetchResult<T>) in
+                results.append((symbol, result))
                 dispatchGroup.leave()
             }
         }
@@ -42,7 +49,7 @@ class StockNetworkManager {
         }
     }
     
-    func getQuote<T: Codable>(with symbol: String, completion: @escaping (FetchResult<T>) -> Void) {
+    func downloadData<T: Codable>(for symbol: String, completion: @escaping (FetchResult<T>) -> Void) {
         guard let url = Finnhub.quoteUrl(symbol) else {
             completion(FetchResult.failure(NetworkError.url))
             return
@@ -51,7 +58,7 @@ class StockNetworkManager {
         downloader.downloadData(from: url) { result in
             switch result {
             case .success(let data):
-                if let decodedData: T = self.parseJson(with: data) {
+                if let decodedData: T = self.parseJson(for: data) {
                     completion(FetchResult.success(decodedData))
                 } else {
                     completion(FetchResult.failure(NetworkError.parseJson))
@@ -64,7 +71,7 @@ class StockNetworkManager {
 }
 
 private extension StockNetworkManager {
-    func parseJson<T: Codable>(with data: Data) -> T? {
+    func parseJson<T: Codable>(for data: Data) -> T? {
         return try? JSONDecoder().decode(T.self, from: data)
     }
 }

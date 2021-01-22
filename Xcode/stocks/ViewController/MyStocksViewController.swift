@@ -47,7 +47,7 @@ class MyStocksViewController: UIViewController {
         setup()
         loadList()
         updateNavBar()
-        updateStockData()
+        setupData()
     }
 
 }
@@ -189,27 +189,58 @@ private extension MyStocksViewController {
         }
 
     }
+    
+    func setupData() {
+        guard let list = dataSource.first?.items else { return }
+        
+        let symbols = list.compactMap { $0.symbol }
+
+        networkManager.fetch(dataType: Finnhub.Quote.self, for: symbols) { [weak self] results in
+            guard let self = self else { return }
+            
+            results.forEach { symbol, result in
+                var items = [Item]()
+                
+                switch result {
+                case .success(let quote):
+                    // TODO: - myQuote 개선하기
+                    // TODO: - Item naming 개선
+                    let item = Item(symbol: symbol, quote: quote.quote)
+                    items.append(item)
+                case .failure(let error):
+                    // TODO: - error 처리
+                    print(error)
+                }
+                
+                // TODO: -  밑 부분 로직 다시짜기
+                var stocks = MyStocks()
+                stocks.save(items)
+
+                // update ui
+                self.refreshControl.endRefreshing()
+                self.dataSource = self.makeDataSource(items: items, sort: self.sort)
+                self.loadList()
+
+                if self.tableView.tableFooterView == nil {
+                    self.tableView.tableFooterView = self.footerView
+                }
+
+                self.updateLabel.date = Date()
+                self.updateLabel.update()
+            }
+        }
+        
+    }
 
     func fetchStockData(completion: @escaping ([Item]) -> Void) {
+        print("11")
         guard let list = dataSource.first?.items else { return }
 
         var stocksData: [String:MyQuote] = [:]
         let group = DispatchGroup()
         
-        let symbols = list.compactMap { $0.symbol }
+       
         
-        networkManager.getQuotes(with: symbols) { results in
-            print(results.count)
-            results.forEach { result in
-                switch result {
-                case .success(let quote): break
-                    
-                case .failure(let error):
-                    print(error)
-                }
-            }
-        }
-
         for item in list {
             group.enter()
             self.provider.getQuote(item.symbol) { (m) in

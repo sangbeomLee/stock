@@ -161,7 +161,7 @@ extension Finnhub {
 
 }
 
-private extension Finnhub.Quote {
+extension Finnhub.Quote {
 
     var quote: MyQuote {
         return MyQuote(price: c, change: c - pc)
