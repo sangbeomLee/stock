@@ -138,17 +138,6 @@ extension Finnhub {
         }
     }
 
-    static func getQuote(_ symbol: String, completion: @escaping (MyQuote?) -> Void) {
-        let url = quoteUrl(symbol)
-        url?.get { (quote: Finnhub.Quote?) in
-            guard let finnQuote = quote else {
-                completion(nil)
-                return
-            }
-
-            completion(finnQuote.quote)
-        }
-    }
 
     static func getSearchResults(_ query: String, completion: @escaping ([Finnhub.Symbol]?) -> Void) {
         let url = symbolUrl()
@@ -161,7 +150,7 @@ extension Finnhub {
 
 }
 
-private extension Finnhub.Quote {
+extension Finnhub.Quote {
 
     var quote: MyQuote {
         return MyQuote(price: c, change: c - pc)
@@ -171,7 +160,7 @@ private extension Finnhub.Quote {
 
 private extension Finnhub {
 
-    static let apiKey = "GET API KEY"
+    static let apiKey = APIKey.key
 
     static let host = "finnhub.io"
     static let baseUrl = "/api/v1"
@@ -239,7 +228,7 @@ private extension Finnhub {
 
 }
 
-private extension Finnhub {
+extension Finnhub {
     static func dividendUrl(_ symbol: String?) -> URL? {
         return url(path: Endpoint.dividend.path, symbol: symbol, numberOfDays: 365)
     }

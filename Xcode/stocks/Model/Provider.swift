@@ -10,30 +10,10 @@ import UIKit
 
 enum Provider: String {
 
-    case iex, finnhub, tiingo
+    case finnhub
 
     func getDetail(_ symbol: String?, completion: @escaping ([DetailSection], UIImage?) -> Void) {
         switch self {
-        case .iex:
-            Iex.getDetail(symbol) { company in
-                guard let company = company else {
-                    completion([],nil)
-                    return
-                }
-
-                completion(company.sections,nil)
-            }
-        case .tiingo:
-            Tiingo.getDetail(symbol) { fundamental in
-                guard let fundamental = fundamental else {
-                    completion([],nil)
-                    return
-                }
-
-                let items = fundamental.items
-                let section = DetailSection(items: items)
-                completion([section],nil)
-            }
         case .finnhub:
             Finnhub.getDetail(symbol) { profile, news, dividends, image, executives in
                 var sections: [DetailSection] = []
@@ -59,42 +39,8 @@ enum Provider: String {
         }
     }
 
-    func getQuote(_ symbol: String?, completion: @escaping (MyQuote?) -> Void) {
-        guard let symbol = symbol else {
-            completion(nil)
-            return
-        }
-
-        switch self {
-        case .iex:
-            Iex.getQuote(symbol) { (m) in
-                completion(m)
-            }
-        case .tiingo:
-            let validSymbol = symbol.replacingOccurrences(of: ".", with: "-")
-            Tiingo.getQuote(validSymbol) { (m) in
-                completion(m)
-            }
-        case .finnhub:
-            let validSymbol = symbol.replacingOccurrences(of: "-", with: ".")
-            Finnhub.getQuote(validSymbol) { (m) in
-                completion(m)
-            }
-        }
-    }
-
     func search(_ query: String, completion: @escaping ([AddItem]?) -> Void) {
         switch self {
-        case .iex:
-            Iex.getSearchResults(query) { results in
-                let items = results?.compactMap { $0.item }
-                completion(items)
-            }
-        case .tiingo:
-            Tiingo.getSearchResults(query) { (results) in
-                let items = results?.compactMap { $0.item }
-                completion(items)
-            }
         case .finnhub:
             Finnhub.getSearchResults(query) { (results) in
                 let items = results?.compactMap { $0.item }
@@ -105,70 +51,12 @@ enum Provider: String {
 
 }
 
-private extension Tiingo.Search {
-
-    var item: AddItem {
-        var a = false
-        if let ticker = ticker {
-            a = MyStocks().symbols.contains(ticker)
-        }
-
-        return AddItem(title: ticker, subtitle: name, alreadyInList: a)
-    }
-
-}
-
 private extension Finnhub.Symbol {
 
     var item: AddItem {
         let inList = MyStocks().symbols.contains(symbol)
 
         return AddItem(title: symbol, subtitle: description, alreadyInList: inList)
-    }
-
-}
-
-private extension Iex.Symbol {
-
-    var item: AddItem {
-        let inList = MyStocks().symbols.contains(symbol)
-
-        return AddItem(title: symbol, subtitle: name, alreadyInList: inList)
-    }
-
-}
-
-private extension Tiingo.Fundamental {
-
-    var items: [DetailItem]? {
-        var items: [DetailItem] = []
-
-        if let value = marketCap?.largeNumberDisplay {
-            let item = DetailItem(subtitle: "Market Capitalization", title: value)
-            items.append(item)
-        }
-
-        if let value = enterpriseVal?.largeNumberDisplay {
-            let item = DetailItem(subtitle: "Enterprise Value", title: value)
-            items.append(item)
-        }
-
-        if let value = peRatio {
-            let item = DetailItem(subtitle: "Price to Earnings Ratio", title: value.display)
-            items.append(item)
-        }
-
-        if let value = pbRatio {
-            let item = DetailItem(subtitle: "Price to Book Ratio", title: value.display)
-            items.append(item)
-        }
-
-        if let value = trailingPEG1Y {
-            let item = DetailItem(subtitle: "PEG ratio using the trailing 1 year EPS growth rate in the denominator", title: value.display)
-            items.append(item)
-        }
-
-        return items
     }
 
 }
@@ -468,98 +356,6 @@ private extension Finnhub.News {
             .replacingOccurrences(of: "http://", with: "")
             .replacingOccurrences(of: "https://", with: "")
             .replacingOccurrences(of: "www.", with: "")
-    }
-
-}
-
-private extension Iex.Company {
-
-    var sections: [DetailSection] {
-        var sections: [DetailSection] = []
-
-        if let s = mainSection {
-            sections.append(s)
-        }
-
-        if let s = addressSection {
-            sections.append(s)
-        }
-
-        return sections
-    }
-
-    var addressSection: DetailSection? {
-        let c = self
-
-        var items: [DetailItem] = []
-
-        let cityState = "\(c.city), \(c.state ?? "") (\(c.country))"
-        items.append(DetailItem(subtitle: c.address, title: cityState))
-
-        let section = DetailSection(items: items)
-
-        return section
-    }
-
-    var mainSection: DetailSection? {
-        let c = self
-
-        var items: [DetailItem] = []
-
-        items.append(DetailItem(subtitle: c.website.absoluteString, title: c.companyName, url: c.website))
-
-        items.append(DetailItem(subtitle: "CEO", title: c.CEO))
-
-        if let value = c.employees.display {
-            items.append(DetailItem(subtitle: "Employees", title: value))
-        }
-
-        items.append(DetailItem(subtitle: c.description))
-
-        let h = "\(c.exchange)\(Theme.separator)\(c.sector)"
-        let section = DetailSection(header: h, items: items)
-
-        return section
-    }
-}
-
-struct Dummy {
-
-    static let JSON = """
-               {
-                 "symbol": "AAPL",
-                 "companyName": "Apple Inc.",
-                 "exchange": "NASDAQ",
-                 "industry": "Telecommunications Equipment",
-                 "website": "http://www.apple.com",
-                 "description": "Apple, Inc. engages in the design, manufacture, and marketing of mobile communication, media devices, personal computers, and portable digital music players. It operates through the following geographical segments: Americas, Europe, Greater China, Japan, and Rest of Asia Pacific. The Americas segment includes North and South America. The Europe segment consists of European countries, as well as India, the Middle East, and Africa. The Greater China segment comprises of China, Hong Kong, and Taiwan. The Rest of Asia Pacific segment includes Australia and Asian countries. The company was founded by Steven Paul Jobs, Ronald Gerald Wayne, and Stephen G. Wozniak on April 1, 1976 and is headquartered in Cupertino, CA.",
-                 "CEO": "Timothy Donald Cook",
-                 "securityName": "Apple Inc.",
-                 "issueType": "cs",
-                 "sector": "Electronic Technology",
-                 "primarySicCode": 3663,
-                 "employees": 132000,
-                 "tags": [
-                   "Electronic Technology",
-                   "Telecommunications Equipment"
-                 ],
-                 "address": "One Apple Park Way",
-                 "address2": null,
-                 "state": "CA",
-                 "city": "Cupertino",
-                 "zip": "95014-2083",
-                 "country": "US",
-                 "phone": "1.408.974.3123"
-               }
-           """
-
-
-    static var company: Iex.Company {
-        let jsonData = JSON.data(using: .utf8)!
-        let temp: Iex.Company = try! JSONDecoder().decode(Iex.Company.self, from: jsonData)
-
-        print(temp)
-        return temp
     }
 
 }

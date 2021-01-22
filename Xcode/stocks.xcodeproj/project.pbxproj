@@ -14,7 +14,6 @@
 		654B8C90248057EC003A6024 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 654B8C8F248057EC003A6024 /* Assets.xcassets */; };
 		654B8C93248057EC003A6024 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 654B8C91248057EC003A6024 /* LaunchScreen.storyboard */; };
 		654B8CA2248058B0003A6024 /* AddStockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C9A248058B0003A6024 /* AddStockViewController.swift */; };
-		654B8CA3248058B0003A6024 /* Tiingo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C9C248058B0003A6024 /* Tiingo.swift */; };
 		654B8CA4248058B0003A6024 /* Finnhub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C9D248058B0003A6024 /* Finnhub.swift */; };
 		654B8CA5248058B0003A6024 /* MyQuote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C9E248058B0003A6024 /* MyQuote.swift */; };
 		654B8CA6248058B0003A6024 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C9F248058B0003A6024 /* UserDefault.swift */; };
@@ -23,8 +22,12 @@
 		654B8CAC2480AB93003A6024 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8CAB2480AB93003A6024 /* Provider.swift */; };
 		654B8CAE2480ABCF003A6024 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8CAD2480ABCF003A6024 /* Item.swift */; };
 		65CF819524820A6200CE0C77 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CF819424820A6200CE0C77 /* Theme.swift */; };
-		65CF819724820DDA00CE0C77 /* Iex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CF819624820DDA00CE0C77 /* Iex.swift */; };
 		65CF81992482CD0C00CE0C77 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CF81982482CD0C00CE0C77 /* Extension.swift */; };
+		D3EA566425B9AD4500305E6B /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EA566325B9AD4500305E6B /* Downloader.swift */; };
+		D3EA566825B9B77000305E6B /* StockNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EA566725B9B77000305E6B /* StockNetworkManager.swift */; };
+		D3EA566B25B9B88800305E6B /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EA566A25B9B88800305E6B /* APIKey.swift */; };
+		D3EA566F25B9C66500305E6B /* StockStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EA566E25B9C66500305E6B /* StockStorage.swift */; };
+		D3EA567525BAB86B00305E6B /* DetailStockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EA567425BAB86B00305E6B /* DetailStockModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,7 +40,6 @@
 		654B8C92248057EC003A6024 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		654B8C94248057EC003A6024 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		654B8C9A248058B0003A6024 /* AddStockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStockViewController.swift; sourceTree = "<group>"; };
-		654B8C9C248058B0003A6024 /* Tiingo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tiingo.swift; sourceTree = "<group>"; };
 		654B8C9D248058B0003A6024 /* Finnhub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Finnhub.swift; sourceTree = "<group>"; };
 		654B8C9E248058B0003A6024 /* MyQuote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyQuote.swift; sourceTree = "<group>"; };
 		654B8C9F248058B0003A6024 /* UserDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
@@ -46,8 +48,12 @@
 		654B8CAB2480AB93003A6024 /* Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
 		654B8CAD2480ABCF003A6024 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		65CF819424820A6200CE0C77 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		65CF819624820DDA00CE0C77 /* Iex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Iex.swift; sourceTree = "<group>"; };
 		65CF81982482CD0C00CE0C77 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		D3EA566325B9AD4500305E6B /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
+		D3EA566725B9B77000305E6B /* StockNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockNetworkManager.swift; sourceTree = "<group>"; };
+		D3EA566A25B9B88800305E6B /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
+		D3EA566E25B9C66500305E6B /* StockStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockStorage.swift; sourceTree = "<group>"; };
+		D3EA567425BAB86B00305E6B /* DetailStockModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailStockModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,13 +86,12 @@
 		654B8C85248057EA003A6024 /* stocks */ = {
 			isa = PBXGroup;
 			children = (
+				D3EA566225B9AD3300305E6B /* API */,
 				654B8C94248057EC003A6024 /* Info.plist */,
-				654B8C9A248058B0003A6024 /* AddStockViewController.swift */,
+				D3EA566025B9ACC700305E6B /* ViewController */,
 				654B8C86248057EA003A6024 /* AppDelegate.swift */,
-				654B8CA924807D5E003A6024 /* DetailViewController.swift */,
 				65CF81982482CD0C00CE0C77 /* Extension.swift */,
 				654B8CAD2480ABCF003A6024 /* Item.swift */,
-				654B8C8A248057EA003A6024 /* MyStocksViewController.swift */,
 				654B8C88248057EA003A6024 /* SceneDelegate.swift */,
 				65CF819424820A6200CE0C77 /* Theme.swift */,
 				654B8CA0248058B0003A6024 /* UpdateLabel.swift */,
@@ -103,12 +108,32 @@
 			isa = PBXGroup;
 			children = (
 				654B8C9D248058B0003A6024 /* Finnhub.swift */,
-				65CF819624820DDA00CE0C77 /* Iex.swift */,
 				654B8C9E248058B0003A6024 /* MyQuote.swift */,
 				654B8CAB2480AB93003A6024 /* Provider.swift */,
-				654B8C9C248058B0003A6024 /* Tiingo.swift */,
+				D3EA567425BAB86B00305E6B /* DetailStockModel.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		D3EA566025B9ACC700305E6B /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				654B8C9A248058B0003A6024 /* AddStockViewController.swift */,
+				654B8CA924807D5E003A6024 /* DetailViewController.swift */,
+				654B8C8A248057EA003A6024 /* MyStocksViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		D3EA566225B9AD3300305E6B /* API */ = {
+			isa = PBXGroup;
+			children = (
+				D3EA566325B9AD4500305E6B /* Downloader.swift */,
+				D3EA566725B9B77000305E6B /* StockNetworkManager.swift */,
+				D3EA566A25B9B88800305E6B /* APIKey.swift */,
+				D3EA566E25B9C66500305E6B /* StockStorage.swift */,
+			);
+			path = API;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -183,8 +208,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				654B8CAA24807D5E003A6024 /* DetailViewController.swift in Sources */,
+				D3EA567525BAB86B00305E6B /* DetailStockModel.swift in Sources */,
 				654B8CA6248058B0003A6024 /* UserDefault.swift in Sources */,
 				654B8CA4248058B0003A6024 /* Finnhub.swift in Sources */,
+				D3EA566F25B9C66500305E6B /* StockStorage.swift in Sources */,
 				654B8C8B248057EA003A6024 /* MyStocksViewController.swift in Sources */,
 				654B8CAC2480AB93003A6024 /* Provider.swift in Sources */,
 				654B8CA5248058B0003A6024 /* MyQuote.swift in Sources */,
@@ -192,10 +219,11 @@
 				654B8CAE2480ABCF003A6024 /* Item.swift in Sources */,
 				654B8C87248057EA003A6024 /* AppDelegate.swift in Sources */,
 				654B8CA7248058B0003A6024 /* UpdateLabel.swift in Sources */,
+				D3EA566425B9AD4500305E6B /* Downloader.swift in Sources */,
+				D3EA566B25B9B88800305E6B /* APIKey.swift in Sources */,
 				654B8C89248057EA003A6024 /* SceneDelegate.swift in Sources */,
-				654B8CA3248058B0003A6024 /* Tiingo.swift in Sources */,
-				65CF819724820DDA00CE0C77 /* Iex.swift in Sources */,
 				654B8CA2248058B0003A6024 /* AddStockViewController.swift in Sources */,
+				D3EA566825B9B77000305E6B /* StockNetworkManager.swift in Sources */,
 				65CF819524820A6200CE0C77 /* Theme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
