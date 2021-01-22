@@ -8,6 +8,7 @@
 
 import UIKit
 
+// TODO: - Timer 를 두어 몇 초마다 계속 리프레쉬 되게 만들자.
 class MyStocksViewController: UIViewController {
 
     // UI
@@ -17,15 +18,25 @@ class MyStocksViewController: UIViewController {
     private var updateLabel = UpdateLabel()
     
     private let networkManager = StockNetworkManager.shared
-
+    private let storage = StockStorage.shared
+    private var items: [StockItem]? {
+        didSet {
+            tableView.reloadData()
+            
+            guard let items = items else { return }
+            storage.saveStockItems(items)
+        }
+    }
+    
     @IBAction func addButtonTapped(_ sender: Any) {
         addStock()
     }
 
     // Data 
-    fileprivate var dataSource: [Section] = []
+    private var sections: [Section] = []
     private var sort: Sort = .percent
     private let provider: Provider = .finnhub
+    
 
     var footerView: UpdateLabel {
         let label = UpdateLabel()
@@ -42,41 +53,46 @@ class MyStocksViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-
-        setup()
-        loadList()
+        
+        // DATAReload 가 이상하다.
+        setupView()
+        setItems()
+        // TODO: - UI 수정할 때 updateNavBar 고칠 것
         updateNavBar()
-        setStockData()
+        loadStockItems()
+    }
+    
+    func setItems() {
+        items = StockStorage.shared.loadStockItems()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        tableView.reloadData()
     }
 
 }
 
 private extension MyStocksViewController {
-
-    func loadList() {
-        let list = MyStocks().load()
-
-        let count = list.count
-
-        tableView.isHidden = count == 0
-        addButton.isHidden = count != 0
-
-        guard count > 0 else { return }
-
-        dataSource = makeDataSource(items: list, sort: sort)
-        tableView.reloadData()
+    func makeSections() {
+        let stockItems = storage.loadStockItems()
+        
+        sections = makeSections(items: stockItems, sort: sort)
     }
 
-    func setup() {
+    func setupView() {
+        setupTableView()
+        
+        refreshControl.addTarget(self, action: #selector(loadStockItems), for: .valueChanged)
+    }
+    
+    func setupTableView() {
         tableView.addSubview(refreshControl)
         tableView.tableFooterView = self.footerView
-        refreshControl.addTarget(self, action: #selector(setStockData), for: .valueChanged)
-
-        let interval: TimeInterval = 60
-        Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { (_:Timer)->Void in
-            self.updateLabel.update()
-        }
+        
+        tableView.isHidden = storage.isEmpty
+        addButton.isHidden = !storage.isEmpty
     }
 
     func updateNavBar(_ isEditing: Bool = false) {
@@ -91,7 +107,7 @@ private extension MyStocksViewController {
 
             let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editStocks))
 
-            navigationItem.rightBarButtonItems = dataSource.first?.items?.count ?? 0 == 0 ?
+            navigationItem.rightBarButtonItems = sections.first?.items?.count ?? 0 == 0 ?
                 [addButton] : [editButton, addButton]
         }
     }
@@ -118,40 +134,35 @@ private extension MyStocksViewController {
         tableView.setEditing(isEditing, animated: true)
     }
     
-    func setStockData() {
-        guard let list = dataSource.first?.items else { return }
-        
-        let symbols = list.compactMap { $0.symbol }
+    func loadStockItems() {
+        guard let items = items else { return }
+        let symbols = items.compactMap { $0.symbol }
 
         networkManager.fetch(dataType: Finnhub.Quote.self, for: symbols) { [weak self] results in
             guard let self = self else { return }
             
+            var fetchItems = [StockItem]()
             results.forEach { symbol, result in
-                var items = [Item]()
-                
                 switch result {
                 case .success(let quote):
                     // TODO: - myQuote 개선하기
                     // TODO: - Item naming 개선
-                    let item = Item(symbol: symbol, quote: quote.quote)
-                    items.append(item)
+                    let fetchItem = StockItem(symbol: symbol, quote: quote.quote)
+                    fetchItems.append(fetchItem)
                 case .failure(let error):
                     // TODO: - error 처리
                     print(error)
                 }
-                
-                // TODO: -  밑 부분 로직 다시짜기
-                var stocks = MyStocks()
-                stocks.save(items)
-
-                // update ui
-                self.refreshControl.endRefreshing()
-                self.dataSource = self.makeDataSource(items: items, sort: self.sort)
-                self.loadList()
-
-                self.updateLabel.date = Date()
-                self.updateLabel.update()
             }
+            
+            // TODO: -  밑 부분 로직 다시짜기
+            // TODO: - UI 관련 해서 짜기
+            // TODO: - tableView 가 어떻게 뿌려주고 있는지 확인하기
+            // TODO: - Section 으로 되어있는데 이부분을 없애버리자
+            self.items = fetchItems
+            self.refreshControl.endRefreshing()
+            self.updateLabel.date = Date()
+            self.updateLabel.update()
         }
         
     }
@@ -168,14 +179,14 @@ private extension MyStocksViewController {
             sort = .symbol
         }
 
-        loadList()
+        makeSections()
     }
 
 }
 
 private extension MyStocksViewController {
 
-    func makeDataSource(items: [Item], sort: Sort) -> [Section] {
+    func makeSections(items: [StockItem], sort: Sort) -> [Section] {
         // sort items
         let sorted = sortItems(items, sort: sort)
 
@@ -189,8 +200,8 @@ private extension MyStocksViewController {
         return [section]
     }
 
-    func sortItems(_ items: [Item], sort: Sort) -> [Item] {
-        var sorted: [Item] = []
+    func sortItems(_ items: [StockItem], sort: Sort) -> [StockItem] {
+        var sorted: [StockItem] = []
 
         switch sort {
         case .symbol:
@@ -223,7 +234,7 @@ extension MyStocksViewController: UITableViewDelegate {
             button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
         ])
 
-        let s = dataSource[section]
+        let s = sections[section]
         let title = "   \(s.header ?? "")   "
         button.setTitle(title, for: .normal)
 
@@ -238,7 +249,7 @@ extension MyStocksViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let s = dataSource[section]
+        let s = sections[section]
         return s.header
     }
 
@@ -251,15 +262,15 @@ extension MyStocksViewController: UITableViewDelegate {
             s.save(list)
 
             // step 2 of 2: update ui
-            dataSource = makeDataSource(items: list, sort: sort)
-            loadList()
+            sections = makeSections(items: list, sort: sort)
+            makeSections()
         }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        let s = dataSource[indexPath.section]
+        let s = sections[indexPath.section]
         guard let item = s.items?[indexPath.row] else { return }
 
         let d = DetailViewController()
@@ -278,18 +289,18 @@ extension MyStocksViewController: UITableViewDelegate {
 extension MyStocksViewController: UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return dataSource.count
+        return sections.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let s = dataSource[section]
+        let s = sections[section]
         return s.items?.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .value1, reuseIdentifier: "id")
 
-        let s = dataSource[indexPath.section]
+        let s = sections[indexPath.section]
         if let item = s.items?[indexPath.row] {
             cell.textLabel?.text = item.symbol
 
@@ -320,16 +331,16 @@ extension MyStocksViewController: SelectStock {
         var s = MyStocks()
         var list = s.load()
 
-        let item = Item(symbol: stock)
+        let item = StockItem(symbol: stock)
 
         guard list.contains(item) == false else { return }
 
         list.append(item)
         s.save(list)
 
-        loadList()
+        makeSections()
         updateNavBar()
-        setStockData()
+        loadStockItems()
     }
 
 }
@@ -349,15 +360,15 @@ struct MyStocks {
         return sections
     }
 
-    fileprivate func load() -> [Item] {
+    fileprivate func load() -> [StockItem] {
         return list
     }
 
-    fileprivate mutating func save(_ items: [Item]) {
+    fileprivate mutating func save(_ items: [StockItem]) {
         self.list = items
     }
 
-    private var list: [Item] = UserDefaultsConfig.list {
+    private var list: [StockItem] = UserDefaultsConfig.list {
         didSet {
             UserDefaultsConfig.list = list
         }
@@ -366,20 +377,18 @@ struct MyStocks {
 }
 
 private struct UserDefaultsConfig {
-
     @UserDefault("list", defaultValue: [])
-    fileprivate static var list: [Item]
-
+    fileprivate static var list: [StockItem]
 }
 
-private struct Section {
+//private struct Section {
+//
+//    var header: String?
+//    var items: [StockItem]?
+//
+//}
 
-    var header: String?
-    var items: [Item]?
-
-}
-
-private extension Item {
+private extension StockItem {
 
     var attributedValue: NSAttributedString? {
         return quote?.value

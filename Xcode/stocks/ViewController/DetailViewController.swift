@@ -13,7 +13,7 @@ import UIKit
 // TODO: show change of price/percent in different colors
 class DetailViewController: UIViewController {
 
-    var item: Item? {
+    var item: StockItem? {
         didSet {
             title = item?.symbol
             fetchData(item?.symbol)
@@ -186,7 +186,7 @@ struct DetailItem {
 
 }
 
-private extension Item {
+private extension StockItem {
 
     var items: [DetailItem] {
         var items: [DetailItem] = []

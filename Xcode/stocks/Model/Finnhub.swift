@@ -152,8 +152,8 @@ extension Finnhub {
 
 extension Finnhub.Quote {
 
-    var quote: MyQuote {
-        return MyQuote(price: c, change: c - pc)
+    var quote: QueteModel {
+        return QueteModel(price: c, change: c - pc)
     }
 
 }
