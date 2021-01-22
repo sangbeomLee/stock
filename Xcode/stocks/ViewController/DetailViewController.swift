@@ -48,6 +48,17 @@ private extension DetailViewController {
         spinner.startAnimating()
 
         let priceItems = item?.items
+        
+        guard let symbol = symbol else { return }
+        
+        StockNetworkManager.shared.fetchDetailData(for: symbol) { result in
+            switch result {
+            case .success(let model):
+                print(model)
+            case .failure(let error):
+                print(error)
+            }
+        }
 
         provider?.getDetail(symbol, completion: { (sections, image) in
             self.spinner.stopAnimating()

@@ -138,6 +138,7 @@ extension Finnhub {
         }
     }
 
+
     static func getSearchResults(_ query: String, completion: @escaping ([Finnhub.Symbol]?) -> Void) {
         let url = symbolUrl()
         url?.get { (results: [Finnhub.Symbol]?) in

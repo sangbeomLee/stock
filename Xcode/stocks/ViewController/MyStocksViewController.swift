@@ -22,7 +22,7 @@ class MyStocksViewController: UIViewController {
         addStock()
     }
 
-    // Data
+    // Data 
     fileprivate var dataSource: [Section] = []
     private var sort: Sort = .percent
     private let provider: Provider = .finnhub

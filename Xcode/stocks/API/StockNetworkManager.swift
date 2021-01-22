@@ -27,18 +27,30 @@ class StockNetworkManager {
     
     // TODO: - fetch 를 사용해서 모든 것을 다 할 수 있게 하자.
     func fetch<T: Codable>(dataType: T.Type, for symbols: [String], completion: @escaping ([(String, FetchResult<T>)]) -> Void) {
-        getFetchData(for: symbols, completion: completion)
+        getFetchedData(for: symbols, completion: completion)
     }
     
-    
-    func getFetchData<T: Codable>(for symbols: [String], completion: @escaping ([(String, FetchResult<T>)]) -> Void) {
+    func fetchDetailData(for symbol: String, completion: @escaping (FetchResult<DetailStockModel>) -> Void) {
+        getFetchedDetailResult(for: symbol, completion: completion)
+    }
+
+}
+
+private extension StockNetworkManager {
+    func getFetchedData<T: Codable>(for symbols: [String], completion: @escaping ([(String, FetchResult<T>)]) -> Void) {
         var results = [(String, FetchResult<T>)]()
         // TODO: - 좀더 여기에 알맞는 네이밍 고려해보기
         let dispatchGroup = DispatchGroup()
         
         symbols.forEach {[weak self] symbol in
+            guard let url = Finnhub.quoteUrl(symbol) else {
+                results.append((symbol, FetchResult.failure(NetworkError.url)))
+                return
+            }
+            
             dispatchGroup.enter()
-            self?.downloadData(for: symbol) { (result: FetchResult<T>) in
+            
+            self?.downloadData(from: url) { (result: FetchResult<T>) in
                 results.append((symbol, result))
                 dispatchGroup.leave()
             }
@@ -49,8 +61,86 @@ class StockNetworkManager {
         }
     }
     
-    func downloadData<T: Codable>(for symbol: String, completion: @escaping (FetchResult<T>) -> Void) {
-        guard let url = Finnhub.quoteUrl(symbol) else {
+    func getFetchedDetailResult(for symbol: String, completion: @escaping (FetchResult<DetailStockModel>) -> Void) {
+        var detailStock = DetailStockModel()
+        let dispatchGroup = DispatchGroup()
+        
+        // TODO: - 이 부분 공통화가 가능한지..?
+        // TODO: 배열 처리도 해줘야한다.
+        
+        dispatchGroup.enter()
+        downloadStockDetail(from: Finnhub.profile2Url(symbol), dataType: Finnhub.Profile.self) { profile in
+            detailStock.profile = profile
+            // TODO: - logo Image 받아와야한다.
+            if let logoUrlString = profile?.logo, let logoUrl = URL(string: logoUrlString) {
+            }
+            dispatchGroup.leave()
+        }
+        
+        // download news
+        if let newsUrl = Finnhub.newsUrl(symbol) {
+            dispatchGroup.enter()
+            
+            downloadData(from: newsUrl) { (result: FetchResult<[Finnhub.News]>) in
+                switch result {
+                case .success(let news):
+                    // TODO: - 여러개를 받으면 오류가 날 것이다 . 이를 해결하자.
+                    detailStock.news = news
+                case .failure(let error):
+                    print(error)
+                }
+                dispatchGroup.leave()
+            }
+        }
+        
+        if let dividendUrl = Finnhub.dividendUrl(symbol) {
+            dispatchGroup.enter()
+            
+            downloadData(from: dividendUrl) { (result: FetchResult<[Finnhub.Dividend]>) in
+                switch result {
+                case .success(let dividend):
+                    // TODO: - 여러개를 받으면 오류가 날 것이다 . 이를 해결하자.
+                    detailStock.dividend = dividend
+                case .failure(let error):
+                    print(error)
+                }
+                dispatchGroup.leave()
+            }
+        }
+        
+        if let executeiveUrl = Finnhub.executiveUrl(symbol) {
+            dispatchGroup.enter()
+            
+            downloadData(from: executeiveUrl) { (result: FetchResult<Finnhub.ExecutiveResponse>) in
+                switch result {
+                case .success(let excutiveResponse):
+                    // TODO: - 여러개를 받으면 오류가 날 것이다 . 이를 해결하자.
+                    detailStock.excutive = excutiveResponse.executive
+                case .failure(let error):
+                    print(error)
+                }
+                dispatchGroup.leave()
+            }
+        }
+
+        dispatchGroup.notify(queue: .main) {
+            completion(FetchResult.success(detailStock))
+        }
+    }
+    
+    func downloadStockDetail<T: Codable>(from url: URL?, dataType: T.Type,completion: @escaping (T?) -> ()) {
+        downloadData(from: url) { (result: FetchResult<T>) in
+            switch result {
+            case .success(let data):
+                completion(data)
+            case .failure(_):
+                completion(nil)
+            }
+        }
+    }
+    
+    func downloadData<T: Codable>(from url: URL?, completion: @escaping (FetchResult<T>) -> Void) {
+        guard let url = url else {
             completion(FetchResult.failure(NetworkError.url))
             return
         }
@@ -68,9 +158,7 @@ class StockNetworkManager {
             }
         }
     }
-}
-
-private extension StockNetworkManager {
+    
     func parseJson<T: Codable>(for data: Data) -> T? {
         return try? JSONDecoder().decode(T.self, from: data)
     }

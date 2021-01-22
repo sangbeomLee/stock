@@ -27,6 +27,7 @@
 		D3EA566825B9B77000305E6B /* StockNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EA566725B9B77000305E6B /* StockNetworkManager.swift */; };
 		D3EA566B25B9B88800305E6B /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EA566A25B9B88800305E6B /* APIKey.swift */; };
 		D3EA566F25B9C66500305E6B /* StockStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EA566E25B9C66500305E6B /* StockStorage.swift */; };
+		D3EA567525BAB86B00305E6B /* DetailStockModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EA567425BAB86B00305E6B /* DetailStockModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		D3EA566725B9B77000305E6B /* StockNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockNetworkManager.swift; sourceTree = "<group>"; };
 		D3EA566A25B9B88800305E6B /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
 		D3EA566E25B9C66500305E6B /* StockStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockStorage.swift; sourceTree = "<group>"; };
+		D3EA567425BAB86B00305E6B /* DetailStockModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailStockModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 				654B8C9D248058B0003A6024 /* Finnhub.swift */,
 				654B8C9E248058B0003A6024 /* MyQuote.swift */,
 				654B8CAB2480AB93003A6024 /* Provider.swift */,
+				D3EA567425BAB86B00305E6B /* DetailStockModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -205,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				654B8CAA24807D5E003A6024 /* DetailViewController.swift in Sources */,
+				D3EA567525BAB86B00305E6B /* DetailStockModel.swift in Sources */,
 				654B8CA6248058B0003A6024 /* UserDefault.swift in Sources */,
 				654B8CA4248058B0003A6024 /* Finnhub.swift in Sources */,
 				D3EA566F25B9C66500305E6B /* StockStorage.swift in Sources */,
