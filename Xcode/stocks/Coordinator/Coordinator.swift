@@ -8,10 +8,18 @@
 
 import UIKit
 
+// TODO: - Error 처리에 대한 부분
 protocol Coordinator: AnyObject {
     var parantCoordinator: Coordinator? { get set }
     var childCoordinators: [Coordinator] { get set }
     var navigationVC: UINavigationController? { get set }
     
     func start()
+}
+
+extension Coordinator {
+    func setupNavigationVC(title: String, isLargeTtitle: Bool) {
+        navigationVC?.navigationItem.title = title
+        navigationVC?.navigationBar.prefersLargeTitles = isLargeTtitle
+    }
 }
