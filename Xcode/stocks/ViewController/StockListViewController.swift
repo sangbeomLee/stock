@@ -19,6 +19,8 @@ class StockListViewController: UIViewController {
     // TODO: - updateLabel 삭제
     private var updateLabel = UpdateLabel()
     
+    weak var coordinator: Coordinator?
+    
     private let networkManager = StockNetworkManager.shared
     private let storage = StockStorage.shared
     // TODO: - naming 에 관한 고민..!
