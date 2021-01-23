@@ -8,13 +8,13 @@
 
 import UIKit
 
-protocol SelectStock {
-    func didSelect(_ stock: String?)
+protocol AddStockViewControllerDelegate: AnyObject {
+    func didSelect(stock: String?)
 }
 
 class AddStockViewController: UIViewController {
 
-    var delegate: SelectStock?
+    weak var delegate: AddStockViewControllerDelegate?
 
     var provider: Provider?
 
@@ -64,7 +64,7 @@ private extension AddStockViewController {
                 "AMZN",
                 "SHOP"
         ]
-        dataSource = popularSymbols.dataSource
+        
         tableView.reloadData()
     }
 
@@ -143,7 +143,7 @@ extension AddStockViewController: UITableViewDelegate {
             
             print("selected \(item)")
 
-            self.delegate?.didSelect(item.title)
+            self.delegate?.didSelect(stock: item.title)
 
             // update ui
             item.alreadyInList = item.alreadyInList ? false : true
@@ -181,30 +181,6 @@ extension AddStockViewController: UITableViewDataSource {
         }
 
         return cell
-    }
-
-}
-
-private extension Sequence where Iterator.Element == String {
-
-    var dataSource: [AddSection] {
-        var sections: [AddSection] = []
-
-        let items = self.map { $0.item }
-        let section = AddSection(header: "Popular Stocks", items: items)
-        sections.append(section)
-
-        return sections
-    }
-
-}
-
-private extension String {
-
-    var item: AddItem {
-        let a = MyStocks().symbols.contains(self)
-
-        return AddItem(title: self, alreadyInList: a)
     }
 
 }

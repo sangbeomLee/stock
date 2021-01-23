@@ -33,7 +33,7 @@ class StockStorage {
     }
 
     func saveStockItems(_ items: [StockItem]) {
-        self.stockItems = items
+        stockItems = items
     }
 
     private var stockItems: [StockItem] = UserDefaultsConfig.list {

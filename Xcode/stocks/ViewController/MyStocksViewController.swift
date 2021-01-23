@@ -9,6 +9,7 @@
 import UIKit
 
 // TODO: - Timer 를 두어 몇 초마다 계속 리프레쉬 되게 만들자.
+// TODO: - 정렬법 다르게 변경하기
 class MyStocksViewController: UIViewController {
 
     // UI
@@ -22,7 +23,10 @@ class MyStocksViewController: UIViewController {
     private var items: [StockItem]? {
         didSet {
             tableView.reloadData()
-            
+            refreshControl.endRefreshing()
+            updateFooterLabel()
+
+            // TODO: - 정렬만 해서 바뀌었을때도 저장이 되는데 이 부분은 생각 해 보자.
             guard let items = items else { return }
             storage.saveStockItems(items)
         }
@@ -32,8 +36,7 @@ class MyStocksViewController: UIViewController {
         addStock()
     }
 
-    // Data 
-    private var sections: [Section] = []
+    // Data
     private var sort: Sort = .percent
     private let provider: Provider = .finnhub
     
@@ -65,22 +68,9 @@ class MyStocksViewController: UIViewController {
     func setItems() {
         items = StockStorage.shared.loadStockItems()
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        tableView.reloadData()
-    }
-
 }
 
 private extension MyStocksViewController {
-    func makeSections() {
-        let stockItems = storage.loadStockItems()
-        
-        sections = makeSections(items: stockItems, sort: sort)
-    }
-
     func setupView() {
         setupTableView()
         
@@ -90,7 +80,7 @@ private extension MyStocksViewController {
     func setupTableView() {
         tableView.addSubview(refreshControl)
         tableView.tableFooterView = self.footerView
-        
+
         tableView.isHidden = storage.isEmpty
         addButton.isHidden = !storage.isEmpty
     }
@@ -107,7 +97,7 @@ private extension MyStocksViewController {
 
             let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editStocks))
 
-            navigationItem.rightBarButtonItems = sections.first?.items?.count ?? 0 == 0 ?
+            navigationItem.rightBarButtonItems = items?.count ?? 0 == 0 ?
                 [addButton] : [editButton, addButton]
         }
     }
@@ -140,13 +130,12 @@ private extension MyStocksViewController {
 
         networkManager.fetch(dataType: Finnhub.Quote.self, for: symbols) { [weak self] results in
             guard let self = self else { return }
-            
+    
             var fetchItems = [StockItem]()
             results.forEach { symbol, result in
                 switch result {
                 case .success(let quote):
                     // TODO: - myQuote 개선하기
-                    // TODO: - Item naming 개선
                     let fetchItem = StockItem(symbol: symbol, quote: quote.quote)
                     fetchItems.append(fetchItem)
                 case .failure(let error):
@@ -157,14 +146,8 @@ private extension MyStocksViewController {
             
             // TODO: -  밑 부분 로직 다시짜기
             // TODO: - UI 관련 해서 짜기
-            // TODO: - tableView 가 어떻게 뿌려주고 있는지 확인하기
-            // TODO: - Section 으로 되어있는데 이부분을 없애버리자
             self.items = fetchItems
-            self.refreshControl.endRefreshing()
-            self.updateLabel.date = Date()
-            self.updateLabel.update()
         }
-        
     }
 
     func sortList() {
@@ -178,28 +161,20 @@ private extension MyStocksViewController {
         case .price:
             sort = .symbol
         }
-
-        makeSections()
     }
 
 }
 
+// MARK: - UIupdate
+
 private extension MyStocksViewController {
-
-    func makeSections(items: [StockItem], sort: Sort) -> [Section] {
-        // sort items
-        let sorted = sortItems(items, sort: sort)
-
-        // save list
-        var s = MyStocks()
-        s.save(sorted)
-
-        // make data source
-        let section = Section(header: sort.header, items: sorted)
-
-        return [section]
+    func updateFooterLabel() {
+        updateLabel.date = Date()
+        updateLabel.update()
     }
+}
 
+private extension MyStocksViewController {
     func sortItems(_ items: [StockItem], sort: Sort) -> [StockItem] {
         var sorted: [StockItem] = []
 
@@ -216,11 +191,13 @@ private extension MyStocksViewController {
 
         return sorted
     }
-
 }
+
+// MARK: - UITableViewDelegate
 
 extension MyStocksViewController: UITableViewDelegate {
 
+    // TODO: UI Header View 를 따로 만들자. (어떤 지표인지 알려주는 Label 도 같이 넣어주자.)
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let frame = view.bounds
         let view = UIView(frame: frame)
@@ -234,8 +211,8 @@ extension MyStocksViewController: UITableViewDelegate {
             button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
         ])
 
-        let s = sections[section]
-        let title = "   \(s.header ?? "")   "
+        // TODO: BUTTON TITLE
+        let title = "Test "
         button.setTitle(title, for: .normal)
 
         button.backgroundColor = Theme.color
@@ -249,30 +226,21 @@ extension MyStocksViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let s = sections[section]
-        return s.header
+        return "test"
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // step 1 of 2: update data
-            var s = MyStocks()
-            var list = s.load()
-            list.remove(at: indexPath.row)
-            s.save(list)
-
-            // step 2 of 2: update ui
-            sections = makeSections(items: list, sort: sort)
-            makeSections()
+            items?.remove(at: indexPath.row)
         }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        guard let item = items?[indexPath.row] else { return }
 
-        let s = sections[indexPath.section]
-        guard let item = s.items?[indexPath.row] else { return }
-
+        // TODO: - Coordinate pattern 으로 극복하기.
         let d = DetailViewController()
         d.provider = provider
         d.item = item
@@ -286,24 +254,21 @@ extension MyStocksViewController: UITableViewDelegate {
 
 }
 
+// MARK: - UITableViewDataSource
+
 extension MyStocksViewController: UITableViewDataSource {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return sections.count
-    }
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let s = sections[section]
-        return s.items?.count ?? 0
+        return items?.count ?? 0
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // TODO: - customCell 로 만들어 cell 에서 처리하기.
+        
         let cell = UITableViewCell(style: .value1, reuseIdentifier: "id")
 
-        let s = sections[indexPath.section]
-        if let item = s.items?[indexPath.row] {
+        if let item = items?[indexPath.row] {
             cell.textLabel?.text = item.symbol
-
+            
             switch sort {
             case .change:
                 cell.detailTextLabel?.attributedText = item.changeAttributedValue
@@ -314,8 +279,6 @@ extension MyStocksViewController: UITableViewDataSource {
             case .symbol:
                 cell.detailTextLabel?.attributedText = item.attributedValue
             }
-
-
         }
 
         return cell
@@ -323,73 +286,22 @@ extension MyStocksViewController: UITableViewDataSource {
 
 }
 
-extension MyStocksViewController: SelectStock {
-
-    func didSelect(_ stock: String?) {
+extension MyStocksViewController: AddStockViewControllerDelegate {
+    func didSelect(stock: String?) {
         guard let stock = stock else { return }
-
-        var s = MyStocks()
-        var list = s.load()
 
         let item = StockItem(symbol: stock)
 
-        guard list.contains(item) == false else { return }
+        guard items?.contains(item) == false else { return }
 
-        list.append(item)
-        s.save(list)
+        items?.append(item)
 
-        makeSections()
         updateNavBar()
         loadStockItems()
     }
-
 }
-
-struct MyStocks {
-
-    var symbols: [String] {
-        return list.compactMap { $0.symbol }
-    }
-
-    fileprivate var dataSource: [Section] {
-        var sections: [Section] = []
-
-        let section = Section(items: list)
-        sections.append(section)
-
-        return sections
-    }
-
-    fileprivate func load() -> [StockItem] {
-        return list
-    }
-
-    fileprivate mutating func save(_ items: [StockItem]) {
-        self.list = items
-    }
-
-    private var list: [StockItem] = UserDefaultsConfig.list {
-        didSet {
-            UserDefaultsConfig.list = list
-        }
-    }
-
-}
-
-private struct UserDefaultsConfig {
-    @UserDefault("list", defaultValue: [])
-    fileprivate static var list: [StockItem]
-}
-
-//private struct Section {
-//
-//    var header: String?
-//    var items: [StockItem]?
-//
-//}
 
 private extension StockItem {
-
     var attributedValue: NSAttributedString? {
         return quote?.value
     }
@@ -409,7 +321,6 @@ private extension StockItem {
 }
 
 private enum Sort {
-
     case change, percent, price, symbol
 
     var header: String {
@@ -424,5 +335,4 @@ private enum Sort {
             return "Price Change"
         }
     }
-
 }

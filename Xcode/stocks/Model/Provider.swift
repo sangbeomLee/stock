@@ -40,23 +40,13 @@ enum Provider: String {
     }
 
     func search(_ query: String, completion: @escaping ([AddItem]?) -> Void) {
-        switch self {
-        case .finnhub:
-            Finnhub.getSearchResults(query) { (results) in
-                let items = results?.compactMap { $0.item }
-                completion(items)
-            }
-        }
-    }
-
-}
-
-private extension Finnhub.Symbol {
-
-    var item: AddItem {
-        let inList = MyStocks().symbols.contains(symbol)
-
-        return AddItem(title: symbol, subtitle: description, alreadyInList: inList)
+//        switch self {
+//        case .finnhub:
+//            Finnhub.getSearchResults(query) { (results) in
+//                let items = results?.compactMap { $0.item }
+//                completion(items)
+//            }
+//        }
     }
 
 }

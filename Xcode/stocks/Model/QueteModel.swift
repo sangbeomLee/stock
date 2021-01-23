@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-struct QueteModel: Codable {
+struct QueteModel: Codable, Hashable {
     var price: Double
     var change: Double
 }
