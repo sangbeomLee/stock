@@ -16,6 +16,8 @@ class MyStocksViewController: UIViewController {
     @IBOutlet var tableView: UITableView!
     @IBOutlet var addButton: UIButton!
     private let refreshControl = UIRefreshControl()
+    
+    // TODO: - updateLabel 삭제
     private var updateLabel = UpdateLabel()
     
     private let networkManager = StockNetworkManager.shared
@@ -38,8 +40,6 @@ class MyStocksViewController: UIViewController {
 
     // Data
     private var sort: Sort = .percent
-    private let provider: Provider = .finnhub
-    
 
     var footerView: UpdateLabel {
         let label = UpdateLabel()
@@ -49,7 +49,7 @@ class MyStocksViewController: UIViewController {
         label.frame = f
 
         updateLabel = label
-        updateLabel.provider = provider
+        updateLabel.provider = .finnhub
 
         return label
     }
@@ -108,7 +108,7 @@ private extension MyStocksViewController {
     func addStock() {
         let s = AddStockViewController()
         s.modalPresentationStyle = .formSheet
-        s.provider = provider
+        s.provider = .finnhub
         s.delegate = self
 
         let n = UINavigationController(rootViewController: s)
@@ -242,7 +242,7 @@ extension MyStocksViewController: UITableViewDelegate {
 
         // TODO: - Coordinate pattern 으로 극복하기.
         let d = DetailViewController()
-        d.provider = provider
+        d.provider = .finnhub
         d.item = item
         d.modalPresentationStyle = .formSheet
 
