@@ -16,10 +16,3 @@ protocol Coordinator: AnyObject {
     
     func start()
 }
-
-extension Coordinator {
-    func setupNavigationVC(title: String, isLargeTtitle: Bool) {
-        navigationVC?.navigationItem.title = title
-        navigationVC?.navigationBar.prefersLargeTitles = isLargeTtitle
-    }
-}

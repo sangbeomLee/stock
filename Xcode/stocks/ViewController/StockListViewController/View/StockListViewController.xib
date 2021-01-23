@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="StockListViewController" customModule="stocks" customModuleProvider="target">
+            <connections>
+                <outlet property="addStockButton" destination="Nt5-zo-kSE" id="KmP-TF-chp"/>
+                <outlet property="tableView" destination="3Lf-BZ-p77" id="KBB-Bf-c5Y"/>
+                <outlet property="view" destination="iN0-l3-epB" id="9Nd-UW-WBF"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="3Lf-BZ-p77">
+                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </tableView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nt5-zo-kSE" userLabel="addStockButton">
+                    <rect key="frame" x="138" y="433" width="138" height="30"/>
+                    <state key="normal" title="Add a stock to track">
+                        <color key="titleColor" systemColor="systemTealColor"/>
+                    </state>
+                </button>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="3Lf-BZ-p77" secondAttribute="bottom" id="4bk-Cs-HTe"/>
+                <constraint firstItem="Nt5-zo-kSE" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="GN5-JA-1P6"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="3Lf-BZ-p77" secondAttribute="trailing" id="Iur-Mv-xbg"/>
+                <constraint firstItem="Nt5-zo-kSE" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="NGa-Vv-VN7"/>
+                <constraint firstItem="3Lf-BZ-p77" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="NXh-C0-wo5"/>
+                <constraint firstItem="3Lf-BZ-p77" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="jVl-1t-U7H"/>
+            </constraints>
+            <point key="canvasLocation" x="132" y="87"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemTealColor">
+            <color red="0.35294117647058826" green="0.78431372549019607" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

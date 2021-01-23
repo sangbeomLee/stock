@@ -26,7 +26,6 @@ class StockListCoordinator: Coordinator {
             return
         }
         
-        setupNavigationVC(title: "Stock List", isLargeTtitle: true)
         navigationVC?.pushViewController(stockListVC, animated: true)
     }
 }

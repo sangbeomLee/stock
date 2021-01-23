@@ -10,7 +10,6 @@
 		654B8C87248057EA003A6024 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C86248057EA003A6024 /* AppDelegate.swift */; };
 		654B8C89248057EA003A6024 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C88248057EA003A6024 /* SceneDelegate.swift */; };
 		654B8C8B248057EA003A6024 /* StockListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C8A248057EA003A6024 /* StockListViewController.swift */; };
-		654B8C8E248057EA003A6024 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 654B8C8C248057EA003A6024 /* Main.storyboard */; };
 		654B8C90248057EC003A6024 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 654B8C8F248057EC003A6024 /* Assets.xcassets */; };
 		654B8C93248057EC003A6024 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 654B8C91248057EC003A6024 /* LaunchScreen.storyboard */; };
 		654B8CA2248058B0003A6024 /* AddStockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C9A248058B0003A6024 /* AddStockViewController.swift */; };
@@ -28,6 +27,7 @@
 		D3E5848325BC3A40008BA41F /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E5848225BC3A40008BA41F /* UIViewController+Extension.swift */; };
 		D3E5848825BC3A80008BA41F /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E5848725BC3A80008BA41F /* UIView+Extension.swift */; };
 		D3E5848C25BC3C2D008BA41F /* StockListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E5848B25BC3C2D008BA41F /* StockListCoordinator.swift */; };
+		D3E5849125BC4127008BA41F /* StockListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3E5849025BC4127008BA41F /* StockListViewController.xib */; };
 		D3EA566425B9AD4500305E6B /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EA566325B9AD4500305E6B /* Downloader.swift */; };
 		D3EA566825B9B77000305E6B /* StockNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EA566725B9B77000305E6B /* StockNetworkManager.swift */; };
 		D3EA566B25B9B88800305E6B /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EA566A25B9B88800305E6B /* APIKey.swift */; };
@@ -40,7 +40,6 @@
 		654B8C86248057EA003A6024 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		654B8C88248057EA003A6024 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		654B8C8A248057EA003A6024 /* StockListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockListViewController.swift; sourceTree = "<group>"; };
-		654B8C8D248057EA003A6024 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		654B8C8F248057EC003A6024 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		654B8C92248057EC003A6024 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		654B8C94248057EC003A6024 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -59,6 +58,7 @@
 		D3E5848225BC3A40008BA41F /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		D3E5848725BC3A80008BA41F /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		D3E5848B25BC3C2D008BA41F /* StockListCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockListCoordinator.swift; sourceTree = "<group>"; };
+		D3E5849025BC4127008BA41F /* StockListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StockListViewController.xib; sourceTree = "<group>"; };
 		D3EA566325B9AD4500305E6B /* Downloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		D3EA566725B9B77000305E6B /* StockNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockNetworkManager.swift; sourceTree = "<group>"; };
 		D3EA566A25B9B88800305E6B /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
@@ -109,7 +109,6 @@
 				654B8C9F248058B0003A6024 /* UserDefault.swift */,
 				654B8C8F248057EC003A6024 /* Assets.xcassets */,
 				654B8C91248057EC003A6024 /* LaunchScreen.storyboard */,
-				654B8C8C248057EA003A6024 /* Main.storyboard */,
 				654B8C9B248058B0003A6024 /* Model */,
 			);
 			path = stocks;
@@ -139,6 +138,7 @@
 		D3E5848125BC3A1E008BA41F /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				D3E5849425BC46C7008BA41F /* View */,
 				D3E5848225BC3A40008BA41F /* UIViewController+Extension.swift */,
 				D3E5848725BC3A80008BA41F /* UIView+Extension.swift */,
 				65CF81982482CD0C00CE0C77 /* Extension.swift */,
@@ -146,12 +146,36 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		D3E5849425BC46C7008BA41F /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		D3E5849525BC4753008BA41F /* StockListViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D3E5849725BC4760008BA41F /* View */,
+				654B8C8A248057EA003A6024 /* StockListViewController.swift */,
+			);
+			path = StockListViewController;
+			sourceTree = "<group>";
+		};
+		D3E5849725BC4760008BA41F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				D3E5849025BC4127008BA41F /* StockListViewController.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		D3EA566025B9ACC700305E6B /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
 				654B8C9A248058B0003A6024 /* AddStockViewController.swift */,
 				654B8CA924807D5E003A6024 /* DetailViewController.swift */,
-				654B8C8A248057EA003A6024 /* StockListViewController.swift */,
+				D3E5849525BC4753008BA41F /* StockListViewController */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -227,7 +251,7 @@
 			files = (
 				654B8C93248057EC003A6024 /* LaunchScreen.storyboard in Resources */,
 				654B8C90248057EC003A6024 /* Assets.xcassets in Resources */,
-				654B8C8E248057EA003A6024 /* Main.storyboard in Resources */,
+				D3E5849125BC4127008BA41F /* StockListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,14 +291,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		654B8C8C248057EA003A6024 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				654B8C8D248057EA003A6024 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		654B8C91248057EC003A6024 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
