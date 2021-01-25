@@ -38,7 +38,11 @@ class AddStockViewController: UIViewController {
 
         navigationItem.hidesSearchBarWhenScrolling = false
     }
-    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        coordinator?.end()
+    }
 }
 
 private extension AddStockViewController {

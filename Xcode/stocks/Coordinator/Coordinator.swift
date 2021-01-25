@@ -20,7 +20,7 @@ protocol Coordinator: AnyObject {
 extension Coordinator {
     func childDidFinish(_ child: Coordinator?) {
         guard let childCoordinators = childCoordinators else { return }
-        
+
         for (index, coordinator) in childCoordinators.enumerated() {
             if child === coordinator {
                 self.childCoordinators?.remove(at: index)

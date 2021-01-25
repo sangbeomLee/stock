@@ -34,6 +34,7 @@ class StockListCoordinator: NSObject, Coordinator {
         // TODO: - present로 할 것이기 때문에 새로운 navigationVC 를 넣어 주었다. 이 부분을 해결하는 것을 고민해보자.
         let child = AddStockCoordinator(navigationVC: UINavigationController())
         child.parantCoordinator = self
+        child.delegate = self
         
         child.start()
         childCoordinators?.append(child)
@@ -46,6 +47,12 @@ class StockListCoordinator: NSObject, Coordinator {
         
         child.start()
         childCoordinators?.append(child)
+    }
+}
+
+extension StockListCoordinator: AddStockCoordinatorDelegate {
+    func viewContollerDidEnd(_ coordinator: Coordinator) {
+        childDidFinish(coordinator)
     }
 }
 

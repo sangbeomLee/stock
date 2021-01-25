@@ -44,17 +44,11 @@ class StockListViewController: UIViewController {
         setupNavigation()
         setupView()
         setItems()
-        
         loadStockItems()
     }
-    
-    func setItems() {
-        stockItems = StockStorage.shared.loadStockItems()
-        stockItems = [StockItem(symbol: "AAPL", quoteModel: nil)]
-        tableView.isHidden = stockItems?.count == 0
-        addStockButton.isHidden = !tableView.isHidden
-    }
 }
+
+// MARK: - Setup
 
 private extension StockListViewController {
     func setupNavigation() {
@@ -63,6 +57,24 @@ private extension StockListViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         
         updateNavigationBarButtons()
+    }
+    
+    // 계속 새로 만들고 있는데 만들어놓고 hidden처리 하는 식으로 변경하자. -> NavigationBar 는 Hidden 이 없다.
+    func updateNavigationBarButtons(_ isEditing: Bool = false) {
+        if isEditing {
+            let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(setEditingButton))
+
+            navigationItem.rightBarButtonItems = [doneButton]
+        }
+        else {
+            let image = UIImage(systemName: "plus")
+            let addButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(showAddStockViewController))
+
+            let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(setEditingButton))
+
+            navigationItem.rightBarButtonItems = stockItems?.count ?? 0 == 0 ?
+                [addButton] : [editButton, addButton]
+        }
     }
     
     func setupView() {
@@ -96,34 +108,23 @@ private extension StockListViewController {
         tableView.refreshControl = UIRefreshControl()
         tableView.refreshControl?.addTarget(self, action: #selector(loadStockItems), for: .valueChanged)
     }
-
-    // 계속 새로 만들고 있는데 만들어놓고 hidden처리 하는 식으로 변경하자. -> NavigationBar 는 Hidden 이 없다.
-    func updateNavigationBarButtons(_ isEditing: Bool = false) {
-        if isEditing {
-            let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(editStocks))
-
-            navigationItem.rightBarButtonItems = [doneButton]
-        }
-        else {
-            let image = UIImage(systemName: "plus")
-            let addButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(addStock))
-
-            let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editStocks))
-
-            navigationItem.rightBarButtonItems = stockItems?.count ?? 0 == 0 ?
-                [addButton] : [editButton, addButton]
-        }
+    
+    func setItems() {
+        stockItems = storage.loadStockItems()
+        tableView.isHidden = stockItems?.count == 0
+        addStockButton.isHidden = !tableView.isHidden
     }
 }
 
+// MARK: - Objc Func
+
 @objc
 private extension StockListViewController {
-    // TODO: - Coordinate pattern
-    func addStock() {
+    func showAddStockViewController() {
         coordinator?.createAddStockViewController()
     }
 
-    func editStocks() {
+    func setEditingButton() {
         let isEditing = !tableView.isEditing
         updateNavigationBarButtons(isEditing)
         tableView.setEditing(isEditing, animated: true)
@@ -159,7 +160,7 @@ private extension StockListViewController {
     }
 }
 
-// MARK: - UIUpdate
+// MARK: - Private Func
 
 private extension StockListViewController {
     func updateFooterLabel() {
@@ -175,9 +176,7 @@ private extension StockListViewController {
         guard let items = stockItems else { return }
         storage.saveStockItems(items)
     }
-}
-
-private extension StockListViewController {
+    
     func sortItems() {
         switch sort {
         case .symbol:
@@ -201,23 +200,12 @@ extension StockListViewController: UITableViewDelegate {
         }
     }
 
-    // TODO: - Coordinate pattern
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
         guard let item = stockItems?[indexPath.row] else { return }
 
-        // TODO: - Coordinate pattern 으로 극복하기.
         coordinator?.createStockDetailViewController(item)
-//        let d = StockDetailViewController()
-//        d.provider = .finnhub
-//        d.item = item
-//        d.modalPresentationStyle = .formSheet
-//
-//        let n = UINavigationController(rootViewController: d)
-//        n.navigationBar.prefersLargeTitles = true
-//        n.navigationBar.largeTitleTextAttributes = Theme.attributes
-//        present(n, animated: true, completion: nil)
     }
 
 }
@@ -258,7 +246,7 @@ extension StockListViewController: UITableViewDataSource {
 
 private extension StockListViewController {
     @IBAction func addButtonTapped(_ sender: Any) {
-        addStock()
+        showAddStockViewController()
     }
 }
 
