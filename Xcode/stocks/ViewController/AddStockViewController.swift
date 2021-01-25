@@ -15,7 +15,8 @@ protocol AddStockViewControllerDelegate: AnyObject {
 class AddStockViewController: UIViewController {
 
     weak var delegate: AddStockViewControllerDelegate?
-
+    weak var coordinator: AddStockCoordinator?
+    
     var provider: Provider?
 
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)

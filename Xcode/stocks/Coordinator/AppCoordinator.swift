@@ -10,12 +10,13 @@ import UIKit
 
 class AppCoordinator: Coordinator {
     var parantCoordinator: Coordinator? = nil
-    var childCoordinators = [Coordinator]()
+    var childCoordinators: [Coordinator]? = [Coordinator]()
     var navigationVC: UINavigationController? = UINavigationController()
     
     func start() {
-        let childCoordinator = StockListCoordinator(parantCoordinator: self, navigationVC: navigationVC)
+        let childCoordinator = StockListCoordinator(navigationVC: navigationVC)
+        childCoordinator.parantCoordinator = self
+        childCoordinators?.append(childCoordinator)
         childCoordinator.start()
-        childCoordinators.append(childCoordinator)
     }
 }

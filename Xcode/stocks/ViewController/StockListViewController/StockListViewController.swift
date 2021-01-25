@@ -10,8 +10,9 @@ import UIKit
 
 // TODO: - Timer 를 두어 몇 초마다 계속 리프레쉬 되게 만들자.
 // TODO: - 정렬법 다르게 변경하기
+// TODO: - naming, -> stockList: stockSubscriptionList, addStock: stockList << how about?
 class StockListViewController: UIViewController {
-    weak var coordinator: Coordinator?
+    weak var coordinator: StockListCoordinator?
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var addStockButton: UIButton!
@@ -119,16 +120,7 @@ private extension StockListViewController {
 private extension StockListViewController {
     // TODO: - Coordinate pattern
     func addStock() {
-        let s = AddStockViewController()
-        s.modalPresentationStyle = .formSheet
-        s.provider = .finnhub
-        s.delegate = self
-
-        let n = UINavigationController(rootViewController: s)
-        n.navigationBar.prefersLargeTitles = true
-        n.navigationBar.largeTitleTextAttributes = Theme.attributes
-
-        present(n, animated: true, completion: nil)
+        coordinator?.createAddStockViewController()
     }
 
     func editStocks() {
@@ -216,15 +208,16 @@ extension StockListViewController: UITableViewDelegate {
         guard let item = stockItems?[indexPath.row] else { return }
 
         // TODO: - Coordinate pattern 으로 극복하기.
-        let d = DetailViewController()
-        d.provider = .finnhub
-        d.item = item
-        d.modalPresentationStyle = .formSheet
-
-        let n = UINavigationController(rootViewController: d)
-        n.navigationBar.prefersLargeTitles = true
-        n.navigationBar.largeTitleTextAttributes = Theme.attributes
-        present(n, animated: true, completion: nil)
+        coordinator?.createStockDetailViewController(item)
+//        let d = StockDetailViewController()
+//        d.provider = .finnhub
+//        d.item = item
+//        d.modalPresentationStyle = .formSheet
+//
+//        let n = UINavigationController(rootViewController: d)
+//        n.navigationBar.prefersLargeTitles = true
+//        n.navigationBar.largeTitleTextAttributes = Theme.attributes
+//        present(n, animated: true, completion: nil)
     }
 
 }

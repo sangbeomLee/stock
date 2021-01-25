@@ -31,8 +31,9 @@ public class Downloader {
                 completion(DownloadedDataResult.failure(DownloaderError.fetchError))
                 return
             }
-            
+
             guard let httpResponse = response as? HTTPURLResponse, (200..<300).contains(httpResponse.statusCode) else {
+                let httpResponse = response as? HTTPURLResponse
                 completion(DownloadedDataResult.failure(DownloaderError.responseError))
                 return
             }

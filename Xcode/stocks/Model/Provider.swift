@@ -179,7 +179,7 @@ private extension Finnhub.Profile {
 
     var ipoDisplay: String? {
         guard let ipoDate = ipoDate else { return nil }
-        let df = DetailViewController.displayDateFormatter
+        let df = StockDetailViewController.displayDateFormatter
 
         return df.string(from: ipoDate)
     }
@@ -242,7 +242,7 @@ private extension DetailSection {
 
 }
 
-private extension DetailViewController {
+private extension StockDetailViewController {
 
     static var displayDateFormatter: DateFormatter {
         let df = DateFormatter()
@@ -258,7 +258,7 @@ private extension Finnhub.Dividend {
     var item: DetailItem {
         let t = "\(amount.display ?? "") (\(currency))"
 
-        let df = DetailViewController.displayDateFormatter
+        let df = StockDetailViewController.displayDateFormatter
         var s = ""
         if let date = Finnhub.dateFormatter.date(from: payDate) {
             s = df.string(from: date)
