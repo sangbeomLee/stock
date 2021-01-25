@@ -152,7 +152,7 @@ extension Finnhub {
 
 extension Finnhub.Quote {
 
-    var quote: QueteModel {
+    var quoteModel: QueteModel {
         return QueteModel(price: c, change: c - pc)
     }
 

@@ -192,15 +192,15 @@ private extension StockItem {
         var items: [DetailItem] = []
 
         items.append(
-            DetailItem(subtitle: "Price", title: quote?.price.currency)
+            DetailItem(subtitle: "Price", title: quoteModel?.price.currency)
         )
 
         items.append(
-            DetailItem(subtitle: "Change", title: quote?.change.displaySign)
+            DetailItem(subtitle: "Change", title: quoteModel?.change.displaySign)
         )
 
         items.append(
-            DetailItem(subtitle: "Percent Change", title: quote?.percent.displaySign)
+            DetailItem(subtitle: "Percent Change", title: quoteModel?.percent.displaySign)
         )
 
         return items

@@ -10,11 +10,29 @@ import Foundation
 
 struct StockItem: Codable {
     var symbol: String?
-    var quote: QueteModel?
+    var quoteModel: QueteModel?
 }
 
 extension StockItem: Equatable {
     static func ==(lhs: StockItem, rhs: StockItem) -> Bool {
         return lhs.symbol == rhs.symbol
+    }
+}
+
+extension StockItem {
+    var attributedValue: NSAttributedString? {
+        return quoteModel?.value
+    }
+
+    var changeAttributedValue: NSAttributedString? {
+        return quoteModel?.changeValue
+    }
+
+    var percentAttributedValue: NSAttributedString? {
+        return quoteModel?.percentValue
+    }
+
+    var priceAttributedValue: NSAttributedString? {
+        return quoteModel?.priceAttributedValue
     }
 }

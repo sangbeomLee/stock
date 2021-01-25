@@ -16,8 +16,8 @@ class StockListViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var addStockButton: UIButton!
     
-    // TODO: - make 를 만들던지 해서 간단하게 딱! 하기
     private var footerView: StockListFooterView?
+    // TODO: - headerView 에서 어떤 부분이 있는지 표기하기 sort 에 따라서 어떤것인지 분간이 안간다.
     private var headerView: StockListHeaderView?
     
     private let networkManager = StockNetworkManager.shared
@@ -31,7 +31,11 @@ class StockListViewController: UIViewController {
     }
     
     // Data
-    private var sort: Sort = .percent
+    private var sort: Sort = .percent {
+        didSet {
+            headerView?.sortButtonTitle = sort.title
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,7 +49,7 @@ class StockListViewController: UIViewController {
     
     func setItems() {
         stockItems = StockStorage.shared.loadStockItems()
-        stockItems = [StockItem(symbol: "AAPL", quote: nil)]
+        stockItems = [StockItem(symbol: "AAPL", quoteModel: nil)]
         tableView.isHidden = stockItems?.count == 0
         addStockButton.isHidden = !tableView.isHidden
     }
@@ -71,9 +75,7 @@ private extension StockListViewController {
         setupHeaderFooterView()
         setupRefreshControl()
     }
-    
-    
-    
+
     func setupHeaderFooterView() {
         footerView = StockListFooterView()
         tableView.tableFooterView = footerView
@@ -83,10 +85,10 @@ private extension StockListViewController {
         headerView?.frame.size.height = 40
         tableView.tableHeaderView = headerView
         
-        headerView?.sortButtonTitle = "sort"
+        headerView?.sortButtonTitle = sort.title
         
         // TODO: - 여기서 말고 headerView 자체 func 에서 해결하도록 해 보자
-        headerView?.sortButton.addTarget(self, action: #selector(sortList), for: .touchUpInside)
+        headerView?.sortButton.addTarget(self, action: #selector(sortButtonDidTapped), for: .touchUpInside)
     }
     
     func setupRefreshControl() {
@@ -115,6 +117,7 @@ private extension StockListViewController {
 
 @objc
 private extension StockListViewController {
+    // TODO: - Coordinate pattern
     func addStock() {
         let s = AddStockViewController()
         s.modalPresentationStyle = .formSheet
@@ -146,7 +149,7 @@ private extension StockListViewController {
                 switch result {
                 case .success(let quote):
                     // TODO: - myQuote 개선하기
-                    let fetchItem = StockItem(symbol: symbol, quote: quote.quote)
+                    let fetchItem = StockItem(symbol: symbol, quoteModel: quote.quoteModel)
                     fetchItems.append(fetchItem)
                 case .failure(let error):
                     // TODO: - error 처리
@@ -158,22 +161,13 @@ private extension StockListViewController {
         }
     }
 
-    func sortList() {
-        switch sort {
-        case .symbol:
-            sort = .change
-        case .change:
-            sort = .percent
-        case .percent:
-            sort = .price
-        case .price:
-            sort = .symbol
-        }
+    func sortButtonDidTapped() {
+        sort = sort.next
+        sortItems()
     }
-
 }
 
-// MARK: - UIupdate
+// MARK: - UIUpdate
 
 private extension StockListViewController {
     func updateFooterLabel() {
@@ -186,28 +180,23 @@ private extension StockListViewController {
         updateFooterLabel()
 
         // TODO: - 정렬만 해서 바뀌었을때도 저장이 되는데 이 부분은 생각 해 보자.
-        // TODO: - 중복검사 하자.
         guard let items = stockItems else { return }
         storage.saveStockItems(items)
     }
 }
 
 private extension StockListViewController {
-    func sortItems(_ items: [StockItem], sort: Sort) -> [StockItem] {
-        var sorted: [StockItem] = []
-
+    func sortItems() {
         switch sort {
         case .symbol:
-            sorted = items.sorted { $0.symbol ?? "" < $1.symbol ?? "" }
+            stockItems?.sort { $0.symbol ?? "" < $1.symbol ?? "" }
         case .change:
-            sorted = items.sorted { $0.quote?.change ?? 0 > $1.quote?.change ?? 0 }
+            stockItems?.sort { $0.quoteModel?.change ?? 0 > $1.quoteModel?.change ?? 0 }
         case .percent:
-            sorted = items.sorted { $0.quote?.percent ?? 0 > $1.quote?.percent ?? 0 }
+            stockItems?.sort { $0.quoteModel?.percent ?? 0 > $1.quoteModel?.percent ?? 0 }
         case .price:
-            sorted = items.sorted { $0.quote?.price ?? 0 > $1.quote?.price ?? 0 }
+            stockItems?.sort { $0.quoteModel?.price ?? 0 > $1.quoteModel?.price ?? 0 }
         }
-
-        return sorted
     }
 }
 
@@ -220,6 +209,7 @@ extension StockListViewController: UITableViewDelegate {
         }
     }
 
+    // TODO: - Coordinate pattern
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -294,29 +284,17 @@ extension StockListViewController: AddStockViewControllerDelegate {
     }
 }
 
-private extension StockItem {
-    var attributedValue: NSAttributedString? {
-        return quote?.value
+private enum Sort: Int {
+    case change
+    case percent
+    case price
+    case symbol
+    
+    var next: Sort {
+        Sort(rawValue: (rawValue + 1) % 4) ?? self
     }
 
-    var changeAttributedValue: NSAttributedString? {
-        return quote?.changeValue
-    }
-
-    var percentAttributedValue: NSAttributedString? {
-        return quote?.percentValue
-    }
-
-    var priceAttributedValue: NSAttributedString? {
-        return quote?.priceAttributedValue
-    }
-
-}
-
-private enum Sort {
-    case change, percent, price, symbol
-
-    var header: String {
+    var title: String {
         switch self {
         case .symbol:
             return "Alphabetical"
