@@ -30,6 +30,9 @@
                     <state key="normal" title="Add a stock to track">
                         <color key="titleColor" systemColor="systemTealColor"/>
                     </state>
+                    <connections>
+                        <action selector="addButtonTapped:" destination="-1" eventType="touchUpInside" id="x31-0t-Dev"/>
+                    </connections>
                 </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>

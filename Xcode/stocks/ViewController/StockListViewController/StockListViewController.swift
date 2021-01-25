@@ -11,53 +11,28 @@ import UIKit
 // TODO: - Timer 를 두어 몇 초마다 계속 리프레쉬 되게 만들자.
 // TODO: - 정렬법 다르게 변경하기
 class StockListViewController: UIViewController {
-    // UI
+    weak var coordinator: Coordinator?
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var addStockButton: UIButton!
     
-    private let refreshControl = UIRefreshControl()
-
-    // TODO: - updateLabel 삭제 -> 개선 Label
-    private var updateLabel = UpdateLabel()
-    
-    weak var coordinator: Coordinator?
+    // TODO: - make 를 만들던지 해서 간단하게 딱! 하기
+    private var footerView: StockListFooterView?
+    private var headerView: StockListHeaderView?
     
     private let networkManager = StockNetworkManager.shared
     private let storage = StockStorage.shared
+    
     // TODO: - naming 에 관한 고민..!
     private var stockItems: [StockItem]? {
         didSet {
-            tableView.reloadData()
-            refreshControl.endRefreshing()
-            updateFooterLabel()
-
-            // TODO: - 정렬만 해서 바뀌었을때도 저장이 되는데 이 부분은 생각 해 보자.
-            guard let items = stockItems else { return }
-            storage.saveStockItems(items)
+            stockItemsDidSet()
         }
     }
     
-    @IBAction func addButtonTapped(_ sender: Any) {
-        addStock()
-    }
-
     // Data
     private var sort: Sort = .percent
-
-    var footerView: UpdateLabel {
-        let label = UpdateLabel()
-
-        var f = view.bounds
-        f.size.height = 15
-        label.frame = f
-
-        updateLabel = label
-        updateLabel.provider = .finnhub
-
-        return label
-    }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -70,35 +45,57 @@ class StockListViewController: UIViewController {
     
     func setItems() {
         stockItems = StockStorage.shared.loadStockItems()
+        stockItems = [StockItem(symbol: "AAPL", quote: nil)]
+        tableView.isHidden = stockItems?.count == 0
+        addStockButton.isHidden = !tableView.isHidden
     }
 }
 
 private extension StockListViewController {
     func setupNavigation() {
+        // TODO: - 왜? navigationController 에서 타이틀을 정하는게아니라 ViewController 에서 정하는지 알아보기.
         title = "Stock List"
         navigationController?.navigationBar.prefersLargeTitles = true
-        updateNavBar()
+        
+        updateNavigationBarButtons()
     }
     
     func setupView() {
         setupTableView()
-        
-        refreshControl.addTarget(self, action: #selector(loadStockItems), for: .valueChanged)
     }
     
     func setupTableView() {
         tableView.dataSource = self
         tableView.delegate = self
         
-        tableView.addSubview(refreshControl)
-        tableView.tableFooterView = self.footerView
-
-        tableView.isHidden = storage.isEmpty
-        addStockButton.isHidden = !storage.isEmpty
+        setupHeaderFooterView()
+        setupRefreshControl()
+    }
+    
+    
+    
+    func setupHeaderFooterView() {
+        footerView = StockListFooterView()
+        tableView.tableFooterView = footerView
+        
+        headerView = StockListHeaderView()
+        headerView?.frame = tableView.bounds
+        headerView?.frame.size.height = 40
+        tableView.tableHeaderView = headerView
+        
+        headerView?.sortButtonTitle = "sort"
+        
+        // TODO: - 여기서 말고 headerView 자체 func 에서 해결하도록 해 보자
+        headerView?.sortButton.addTarget(self, action: #selector(sortList), for: .touchUpInside)
+    }
+    
+    func setupRefreshControl() {
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(loadStockItems), for: .valueChanged)
     }
 
-    // TODO: - UI 수정할 때 updateNavBar 고칠 것
-    func updateNavBar(_ isEditing: Bool = false) {
+    // 계속 새로 만들고 있는데 만들어놓고 hidden처리 하는 식으로 변경하자. -> NavigationBar 는 Hidden 이 없다.
+    func updateNavigationBarButtons(_ isEditing: Bool = false) {
         if isEditing {
             let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(editStocks))
 
@@ -133,7 +130,7 @@ private extension StockListViewController {
 
     func editStocks() {
         let isEditing = !tableView.isEditing
-        updateNavBar(isEditing)
+        updateNavigationBarButtons(isEditing)
         tableView.setEditing(isEditing, animated: true)
     }
     
@@ -157,8 +154,6 @@ private extension StockListViewController {
                 }
             }
             
-            // TODO: -  밑 부분 로직 다시짜기
-            // TODO: - UI 관련 해서 짜기
             self.stockItems = fetchItems
         }
     }
@@ -182,8 +177,18 @@ private extension StockListViewController {
 
 private extension StockListViewController {
     func updateFooterLabel() {
-        updateLabel.date = Date()
-        updateLabel.update()
+        footerView?.updatedInfoLabel.text = "updated Date Label"
+    }
+    
+    func stockItemsDidSet() {
+        tableView.reloadData()
+        tableView.refreshControl?.endRefreshing()
+        updateFooterLabel()
+
+        // TODO: - 정렬만 해서 바뀌었을때도 저장이 되는데 이 부분은 생각 해 보자.
+        // TODO: - 중복검사 하자.
+        guard let items = stockItems else { return }
+        storage.saveStockItems(items)
     }
 }
 
@@ -209,39 +214,6 @@ private extension StockListViewController {
 // MARK: - UITableViewDelegate
 
 extension StockListViewController: UITableViewDelegate {
-
-    // TODO: UI Header View 를 따로 만들자. (어떤 지표인지 알려주는 Label 도 같이 넣어주자.)
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let frame = view.bounds
-        let view = UIView(frame: frame)
-
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(button)
-
-        NSLayoutConstraint.activate([
-            button.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8),
-            button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
-        ])
-
-        // TODO: BUTTON TITLE
-        let title = "   \(sort.header)    "
-        button.setTitle(title, for: .normal)
-
-        button.backgroundColor = Theme.color
-        button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(sortList), for: .touchUpInside)
-        button.titleLabel?.font = .preferredFont(forTextStyle: .caption1)
-        button.layer.cornerRadius = 13
-        button.layer.masksToBounds = true
-
-        return view
-    }
-
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "test"
-    }
-
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             stockItems?.remove(at: indexPath.row)
@@ -299,6 +271,14 @@ extension StockListViewController: UITableViewDataSource {
 
 }
 
+// MARK: - Action
+
+private extension StockListViewController {
+    @IBAction func addButtonTapped(_ sender: Any) {
+        addStock()
+    }
+}
+
 extension StockListViewController: AddStockViewControllerDelegate {
     func didSelect(stock: String?) {
         guard let stock = stock else { return }
@@ -309,7 +289,7 @@ extension StockListViewController: AddStockViewControllerDelegate {
 
         stockItems?.append(item)
 
-        updateNavBar()
+        updateNavigationBarButtons()
         loadStockItems()
     }
 }

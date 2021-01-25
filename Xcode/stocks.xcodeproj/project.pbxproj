@@ -22,6 +22,8 @@
 		654B8CAE2480ABCF003A6024 /* StockItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8CAD2480ABCF003A6024 /* StockItem.swift */; };
 		65CF819524820A6200CE0C77 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CF819424820A6200CE0C77 /* Theme.swift */; };
 		65CF81992482CD0C00CE0C77 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CF81982482CD0C00CE0C77 /* Extension.swift */; };
+		D3A7F34725BD6133003D8F61 /* StockListFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A7F34625BD6133003D8F61 /* StockListFooterView.swift */; };
+		D3A7F34A25BE6821003D8F61 /* StockListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A7F34925BE6821003D8F61 /* StockListHeaderView.swift */; };
 		D3E5847925BC3051008BA41F /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E5847825BC3051008BA41F /* Coordinator.swift */; };
 		D3E5847D25BC3105008BA41F /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E5847C25BC3105008BA41F /* AppCoordinator.swift */; };
 		D3E5848325BC3A40008BA41F /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E5848225BC3A40008BA41F /* UIViewController+Extension.swift */; };
@@ -53,6 +55,8 @@
 		654B8CAD2480ABCF003A6024 /* StockItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockItem.swift; sourceTree = "<group>"; };
 		65CF819424820A6200CE0C77 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		65CF81982482CD0C00CE0C77 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		D3A7F34625BD6133003D8F61 /* StockListFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockListFooterView.swift; sourceTree = "<group>"; };
+		D3A7F34925BE6821003D8F61 /* StockListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockListHeaderView.swift; sourceTree = "<group>"; };
 		D3E5847825BC3051008BA41F /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		D3E5847C25BC3105008BA41F /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		D3E5848225BC3A40008BA41F /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -166,6 +170,8 @@
 			isa = PBXGroup;
 			children = (
 				D3E5849025BC4127008BA41F /* StockListViewController.xib */,
+				D3A7F34625BD6133003D8F61 /* StockListFooterView.swift */,
+				D3A7F34925BE6821003D8F61 /* StockListHeaderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -268,10 +274,12 @@
 				654B8CA6248058B0003A6024 /* UserDefault.swift in Sources */,
 				654B8CA4248058B0003A6024 /* Finnhub.swift in Sources */,
 				D3EA566F25B9C66500305E6B /* StockStorage.swift in Sources */,
+				D3A7F34725BD6133003D8F61 /* StockListFooterView.swift in Sources */,
 				654B8C8B248057EA003A6024 /* StockListViewController.swift in Sources */,
 				D3E5848C25BC3C2D008BA41F /* StockListCoordinator.swift in Sources */,
 				D3E5847925BC3051008BA41F /* Coordinator.swift in Sources */,
 				654B8CAC2480AB93003A6024 /* Provider.swift in Sources */,
+				D3A7F34A25BE6821003D8F61 /* StockListHeaderView.swift in Sources */,
 				D3E5848325BC3A40008BA41F /* UIViewController+Extension.swift in Sources */,
 				654B8CA5248058B0003A6024 /* QueteModel.swift in Sources */,
 				65CF81992482CD0C00CE0C77 /* Extension.swift in Sources */,
