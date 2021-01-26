@@ -13,7 +13,7 @@
 		654B8C90248057EC003A6024 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 654B8C8F248057EC003A6024 /* Assets.xcassets */; };
 		654B8C93248057EC003A6024 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 654B8C91248057EC003A6024 /* LaunchScreen.storyboard */; };
 		654B8CA2248058B0003A6024 /* AddStockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C9A248058B0003A6024 /* AddStockViewController.swift */; };
-		654B8CA4248058B0003A6024 /* Finnhub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C9D248058B0003A6024 /* Finnhub.swift */; };
+		654B8CA4248058B0003A6024 /* StockNetworkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C9D248058B0003A6024 /* StockNetworkModel.swift */; };
 		654B8CA5248058B0003A6024 /* QueteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C9E248058B0003A6024 /* QueteModel.swift */; };
 		654B8CA6248058B0003A6024 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8C9F248058B0003A6024 /* UserDefault.swift */; };
 		654B8CA7248058B0003A6024 /* UpdateLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654B8CA0248058B0003A6024 /* UpdateLabel.swift */; };
@@ -26,6 +26,7 @@
 		D3A7F34A25BE6821003D8F61 /* StockListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A7F34925BE6821003D8F61 /* StockListHeaderView.swift */; };
 		D3A7F35125BEA546003D8F61 /* AddStockCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A7F35025BEA546003D8F61 /* AddStockCoordinator.swift */; };
 		D3A7F35525BEB87B003D8F61 /* StockDetailCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A7F35425BEB87B003D8F61 /* StockDetailCoordinator.swift */; };
+		D3A7F35825BF9D23003D8F61 /* StockListViewController+Sort.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A7F35725BF9D23003D8F61 /* StockListViewController+Sort.swift */; };
 		D3E5847925BC3051008BA41F /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E5847825BC3051008BA41F /* Coordinator.swift */; };
 		D3E5847D25BC3105008BA41F /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E5847C25BC3105008BA41F /* AppCoordinator.swift */; };
 		D3E5848325BC3A40008BA41F /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E5848225BC3A40008BA41F /* UIViewController+Extension.swift */; };
@@ -48,7 +49,7 @@
 		654B8C92248057EC003A6024 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		654B8C94248057EC003A6024 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		654B8C9A248058B0003A6024 /* AddStockViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStockViewController.swift; sourceTree = "<group>"; };
-		654B8C9D248058B0003A6024 /* Finnhub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Finnhub.swift; sourceTree = "<group>"; };
+		654B8C9D248058B0003A6024 /* StockNetworkModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StockNetworkModel.swift; sourceTree = "<group>"; };
 		654B8C9E248058B0003A6024 /* QueteModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueteModel.swift; sourceTree = "<group>"; };
 		654B8C9F248058B0003A6024 /* UserDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 		654B8CA0248058B0003A6024 /* UpdateLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateLabel.swift; sourceTree = "<group>"; };
@@ -61,6 +62,7 @@
 		D3A7F34925BE6821003D8F61 /* StockListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockListHeaderView.swift; sourceTree = "<group>"; };
 		D3A7F35025BEA546003D8F61 /* AddStockCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStockCoordinator.swift; sourceTree = "<group>"; };
 		D3A7F35425BEB87B003D8F61 /* StockDetailCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailCoordinator.swift; sourceTree = "<group>"; };
+		D3A7F35725BF9D23003D8F61 /* StockListViewController+Sort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StockListViewController+Sort.swift"; sourceTree = "<group>"; };
 		D3E5847825BC3051008BA41F /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		D3E5847C25BC3105008BA41F /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		D3E5848225BC3A40008BA41F /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -125,7 +127,7 @@
 		654B8C9B248058B0003A6024 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				654B8C9D248058B0003A6024 /* Finnhub.swift */,
+				654B8C9D248058B0003A6024 /* StockNetworkModel.swift */,
 				654B8C9E248058B0003A6024 /* QueteModel.swift */,
 				654B8CAB2480AB93003A6024 /* Provider.swift */,
 				D3EA567425BAB86B00305E6B /* DetailStockModel.swift */,
@@ -168,6 +170,7 @@
 			children = (
 				D3E5849725BC4760008BA41F /* View */,
 				654B8C8A248057EA003A6024 /* StockListViewController.swift */,
+				D3A7F35725BF9D23003D8F61 /* StockListViewController+Sort.swift */,
 			);
 			path = StockListViewController;
 			sourceTree = "<group>";
@@ -278,7 +281,7 @@
 				654B8CAA24807D5E003A6024 /* StockDetailViewController.swift in Sources */,
 				D3EA567525BAB86B00305E6B /* DetailStockModel.swift in Sources */,
 				654B8CA6248058B0003A6024 /* UserDefault.swift in Sources */,
-				654B8CA4248058B0003A6024 /* Finnhub.swift in Sources */,
+				654B8CA4248058B0003A6024 /* StockNetworkModel.swift in Sources */,
 				D3EA566F25B9C66500305E6B /* StockStorage.swift in Sources */,
 				D3A7F34725BD6133003D8F61 /* StockListFooterView.swift in Sources */,
 				654B8C8B248057EA003A6024 /* StockListViewController.swift in Sources */,
@@ -299,6 +302,7 @@
 				654B8CA2248058B0003A6024 /* AddStockViewController.swift in Sources */,
 				D3EA566825B9B77000305E6B /* StockNetworkManager.swift in Sources */,
 				65CF819524820A6200CE0C77 /* Theme.swift in Sources */,
+				D3A7F35825BF9D23003D8F61 /* StockListViewController+Sort.swift in Sources */,
 				D3A7F35525BEB87B003D8F61 /* StockDetailCoordinator.swift in Sources */,
 				D3A7F35125BEA546003D8F61 /* AddStockCoordinator.swift in Sources */,
 			);

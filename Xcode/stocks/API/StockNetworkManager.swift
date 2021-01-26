@@ -33,7 +33,17 @@ class StockNetworkManager {
     func fetchDetailData(for symbol: String, completion: @escaping (FetchResult<DetailStockModel>) -> Void) {
         getFetchedDetailResult(for: symbol, completion: completion)
     }
-
+    
+    //func fetchSearchResults(
+    
+//        static func getSearchResults(_ query: String, completion: @escaping ([StockNetworkModel.Symbol]?) -> Void) {
+//            let url = symbolUrl()
+//            url?.get { (results: [StockNetworkModel.Symbol]?) in
+//                let lower = query.lowercased()
+//                let filtered = results?.compactMap { $0 }.filter { $0.description.lowercased().contains(lower) || $0.symbol.lowercased().contains(lower) }
+//                completion(filtered)
+//            }
+//        }
 }
 
 private extension StockNetworkManager {
@@ -43,7 +53,7 @@ private extension StockNetworkManager {
         let dispatchGroup = DispatchGroup()
         
         symbols.forEach {[weak self] symbol in
-            guard let url = Finnhub.quoteUrl(symbol) else {
+            guard let url = StockNetworkModel.quoteUrl(symbol) else {
                 results.append((symbol, FetchResult.failure(NetworkError.url)))
                 return
             }
@@ -69,7 +79,7 @@ private extension StockNetworkManager {
         // TODO: 배열 처리도 해줘야한다.
         
         dispatchGroup.enter()
-        downloadStockDetail(from: Finnhub.profile2Url(symbol), dataType: Finnhub.Profile.self) { profile in
+        downloadStockDetail(from: StockNetworkModel.profile2Url(symbol), dataType: StockNetworkModel.Profile.self) { profile in
             detailStock.profile = profile
             // TODO: - logo Image 받아와야한다.
             if let logoUrlString = profile?.logo, let logoUrl = URL(string: logoUrlString) {
@@ -78,10 +88,10 @@ private extension StockNetworkManager {
         }
         
         // download news
-        if let newsUrl = Finnhub.newsUrl(symbol) {
+        if let newsUrl = StockNetworkModel.newsUrl(symbol) {
             dispatchGroup.enter()
             
-            downloadData(from: newsUrl) { (result: FetchResult<[Finnhub.News]>) in
+            downloadData(from: newsUrl) { (result: FetchResult<[StockNetworkModel.News]>) in
                 switch result {
                 case .success(let news):
                     // TODO: - 여러개를 받으면 오류가 날 것이다 . 이를 해결하자.
@@ -93,10 +103,10 @@ private extension StockNetworkManager {
             }
         }
         
-        if let dividendUrl = Finnhub.dividendUrl(symbol) {
+        if let dividendUrl = StockNetworkModel.dividendUrl(symbol) {
             dispatchGroup.enter()
             
-            downloadData(from: dividendUrl) { (result: FetchResult<[Finnhub.Dividend]>) in
+            downloadData(from: dividendUrl) { (result: FetchResult<[StockNetworkModel.Dividend]>) in
                 switch result {
                 case .success(let dividend):
                     // TODO: - 여러개를 받으면 오류가 날 것이다 . 이를 해결하자.
@@ -108,10 +118,10 @@ private extension StockNetworkManager {
             }
         }
         
-        if let executeiveUrl = Finnhub.executiveUrl(symbol) {
+        if let executeiveUrl = StockNetworkModel.executiveUrl(symbol) {
             dispatchGroup.enter()
             
-            downloadData(from: executeiveUrl) { (result: FetchResult<Finnhub.ExecutiveResponse>) in
+            downloadData(from: executeiveUrl) { (result: FetchResult<StockNetworkModel.ExecutiveResponse>) in
                 switch result {
                 case .success(let excutiveResponse):
                     // TODO: - 여러개를 받으면 오류가 날 것이다 . 이를 해결하자.

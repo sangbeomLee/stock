@@ -31,7 +31,6 @@ class StockListViewController: UIViewController {
         }
     }
     
-    // Data
     private var sort: Sort = .percent {
         didSet {
             headerView?.sortButtonTitle = sort.title
@@ -134,7 +133,7 @@ private extension StockListViewController {
         guard let items = stockItems else { return }
         let symbols = items.compactMap { $0.symbol }
 
-        networkManager.fetch(dataType: Finnhub.Quote.self, for: symbols) { [weak self] results in
+        networkManager.fetch(dataType: StockNetworkModel.Quote.self, for: symbols) { [weak self] results in
             guard let self = self else { return }
     
             var fetchItems = [StockItem]()
@@ -262,29 +261,5 @@ extension StockListViewController: AddStockViewControllerDelegate {
 
         updateNavigationBarButtons()
         loadStockItems()
-    }
-}
-
-private enum Sort: Int {
-    case change
-    case percent
-    case price
-    case symbol
-    
-    var next: Sort {
-        Sort(rawValue: (rawValue + 1) % 4) ?? self
-    }
-
-    var title: String {
-        switch self {
-        case .symbol:
-            return "Alphabetical"
-        case .percent:
-            return "Percent Change"
-        case .price:
-            return "Current Price"
-        case .change:
-            return "Price Change"
-        }
     }
 }

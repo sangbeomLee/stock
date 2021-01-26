@@ -9,9 +9,9 @@
 import UIKit
 
 struct DetailStockModel {
-    var profile: Finnhub.Profile? = nil
-    var news: [Finnhub.News]? = nil
-    var dividend: [Finnhub.Dividend]? = nil
+    var profile: StockNetworkModel.Profile? = nil
+    var news: [StockNetworkModel.News]? = nil
+    var dividend: [StockNetworkModel.Dividend]? = nil
     var image: UIImage? = nil
-    var excutive: [Finnhub.Executive]? = nil
+    var excutive: [StockNetworkModel.Executive]? = nil
 }

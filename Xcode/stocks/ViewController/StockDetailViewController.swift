@@ -63,29 +63,29 @@ private extension StockDetailViewController {
             }
         }
 
-        provider?.getDetail(symbol, completion: { (sections, image) in
-            self.spinner.stopAnimating()
-
-            if let image = image {
-                let imageView = UIImageView()
-                imageView.contentMode = .scaleAspectFit
-                imageView.image = image
-
-                var frame = self.view.bounds
-                frame.size = image.size
-                imageView.frame = frame
-
-                self.tableview.tableHeaderView = imageView
-            }
-
-            var s = sections
-            let priceSection = DetailSection(items: priceItems)
-            let index = s.count > 1 ? 1 : 0
-            s.insert(priceSection, at: index)
-
-            self.dataSource = s
-            self.tableview.reloadData()
-        })
+//        provider?.getDetail(symbol, completion: { (sections, image) in
+//            self.spinner.stopAnimating()
+//
+//            if let image = image {
+//                let imageView = UIImageView()
+//                imageView.contentMode = .scaleAspectFit
+//                imageView.image = image
+//
+//                var frame = self.view.bounds
+//                frame.size = image.size
+//                imageView.frame = frame
+//
+//                self.tableview.tableHeaderView = imageView
+//            }
+//
+//            var s = sections
+//            let priceSection = DetailSection(items: priceItems)
+//            let index = s.count > 1 ? 1 : 0
+//            s.insert(priceSection, at: index)
+//
+//            self.dataSource = s
+//            self.tableview.reloadData()
+//        })
 
     }
 

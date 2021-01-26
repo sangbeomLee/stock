@@ -12,32 +12,32 @@ enum Provider: String {
 
     case finnhub
 
-    func getDetail(_ symbol: String?, completion: @escaping ([DetailSection], UIImage?) -> Void) {
-        switch self {
-        case .finnhub:
-            Finnhub.getDetail(symbol) { profile, news, dividends, image, executives in
-                var sections: [DetailSection] = []
-
-                if let s = profile?.sections {
-                    sections.append(contentsOf: s)
-                }
-
-                if let s = DetailSection.section(dividends) {
-                    sections.append(s)
-                }
-
-                if let s = DetailSection.section(executives) {
-                    sections.append(s)
-                }
-
-                if let s = DetailSection.section(news) {
-                    sections.append(s)
-                }
-    
-                completion(sections,image)
-            }
-        }
-    }
+//    func getDetail(_ symbol: String?, completion: @escaping ([DetailSection], UIImage?) -> Void) {
+//        switch self {
+//        case .finnhub:
+//            Finnhub.getDetail(symbol) { profile, news, dividends, image, executives in
+//                var sections: [DetailSection] = []
+//
+//                if let s = profile?.sections {
+//                    sections.append(contentsOf: s)
+//                }
+//
+//                if let s = DetailSection.section(dividends) {
+//                    sections.append(s)
+//                }
+//
+//                if let s = DetailSection.section(executives) {
+//                    sections.append(s)
+//                }
+//
+//                if let s = DetailSection.section(news) {
+//                    sections.append(s)
+//                }
+//
+//                completion(sections,image)
+//            }
+//        }
+//    }
 
     func search(_ query: String, completion: @escaping ([AddItem]?) -> Void) {
 //        switch self {
@@ -107,7 +107,7 @@ private extension Double {
 
 }
 
-private extension Finnhub.Profile {
+private extension StockNetworkModel.Profile {
 
     var sections: [DetailSection]? {
         var sections: [DetailSection] = []
@@ -174,7 +174,7 @@ private extension Finnhub.Profile {
     }
 
     var ipoDate: Date? {
-        return Finnhub.dateFormatter.date(from: ipo)
+        return StockNetworkModel.dateFormatter.date(from: ipo)
     }
 
     var ipoDisplay: String? {
@@ -207,7 +207,7 @@ private extension DetailItem {
 
 private extension DetailSection {
 
-    static func section(_ div: [Finnhub.Dividend]?) -> DetailSection? {
+    static func section(_ div: [StockNetworkModel.Dividend]?) -> DetailSection? {
         guard let div = div, div.count > 0 else { return nil }
 
         let items = div.compactMap { $0.item }
@@ -217,7 +217,7 @@ private extension DetailSection {
         return section
     }
 
-    static func section(_ execs: [Finnhub.Executive]?) -> DetailSection? {
+    static func section(_ execs: [StockNetworkModel.Executive]?) -> DetailSection? {
         guard let execs = execs, execs.count > 0 else { return nil }
 
         let items = execs.map { $0.item }
@@ -231,7 +231,7 @@ private extension DetailSection {
         return section
     }
 
-    static func section(_ news: [Finnhub.News]?) -> DetailSection? {
+    static func section(_ news: [StockNetworkModel.News]?) -> DetailSection? {
         let items = news?.compactMap { $0.item }
         guard items?.count ?? 0 > 0 else { return nil }
 
@@ -253,14 +253,14 @@ private extension StockDetailViewController {
 
 }
 
-private extension Finnhub.Dividend {
+private extension StockNetworkModel.Dividend {
 
     var item: DetailItem {
         let t = "\(amount.display ?? "") (\(currency))"
 
         let df = StockDetailViewController.displayDateFormatter
         var s = ""
-        if let date = Finnhub.dateFormatter.date(from: payDate) {
+        if let date = StockNetworkModel.dateFormatter.date(from: payDate) {
             s = df.string(from: date)
 
             let rdf = RelativeDateTimeFormatter()
@@ -272,7 +272,7 @@ private extension Finnhub.Dividend {
 
 }
 
-private extension Finnhub.Executive {
+private extension StockNetworkModel.Executive {
 
     var item: DetailItem {
         var sub: [String] = []
@@ -323,7 +323,7 @@ private extension Finnhub.Executive {
 
 }
 
-private extension Finnhub.News {
+private extension StockNetworkModel.News {
 
     var item: DetailItem? {
         var sub: [String] = []
