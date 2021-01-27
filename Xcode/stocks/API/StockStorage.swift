@@ -24,7 +24,16 @@ class StockStorage {
     }
 
     func saveStockItems(_ items: [StockItem]) {
-        stockItems = items
+        let filteredItems = items.filter { !stockItems.contains($0) }
+        stockItems.append(contentsOf: filteredItems)
+    }
+    
+    func deleteStockItems(_ items: [StockItem]) {
+        items.forEach { item in
+            if let index = stockItems.firstIndex(of: item) {
+                stockItems.remove(at: index)
+            }
+        }
     }
 
     private var stockItems: [StockItem] = UserDefaultsConfig.list {

@@ -34,7 +34,21 @@ class StockNetworkManager {
         getFetchedDetailResult(for: symbol, completion: completion)
     }
     
-    //func fetchSearchResults(
+    // TODO: - SearchResult 실행하기
+    func fetchSearchResults(_ query: String, completion: @escaping (FetchResult<[StockNetworkModel.Symbol]>) -> Void) {
+        
+    }
+    
+//    static func symbolUrl(_ exchange: String = "US") -> URL? {
+//        var c = baseUrlComponents
+//        c.path = Endpoint.symbol.path
+//
+//        let exchangeQi = URLQueryItem(name: "exchange", value: exchange)
+//        c.queryItems = [ exchangeQi,tokenQueryItem ]
+//
+//        let u = c.url
+//        return u
+//    }
     
 //        static func getSearchResults(_ query: String, completion: @escaping ([StockNetworkModel.Symbol]?) -> Void) {
 //            let url = symbolUrl()
@@ -136,6 +150,11 @@ private extension StockNetworkManager {
         dispatchGroup.notify(queue: .main) {
             completion(FetchResult.success(detailStock))
         }
+    }
+    
+    func getFetchedSearchResult(_ query: String, completion: @escaping (FetchResult<[StockNetworkModel.Symbol]>) -> Void) {
+        let url = StockNetworkModel.symbolUrl()
+        // 새로 짜보자.
     }
     
     func downloadStockDetail<T: Codable>(from url: URL?, dataType: T.Type,completion: @escaping (T?) -> ()) {

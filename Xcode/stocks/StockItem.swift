@@ -9,7 +9,7 @@
 import Foundation
 
 struct StockItem: Codable {
-    var symbol: String?
+    var symbol: String
     var quoteModel: QueteModel?
 }
 

@@ -27,6 +27,7 @@
 		D3A7F35125BEA546003D8F61 /* AddStockCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A7F35025BEA546003D8F61 /* AddStockCoordinator.swift */; };
 		D3A7F35525BEB87B003D8F61 /* StockDetailCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A7F35425BEB87B003D8F61 /* StockDetailCoordinator.swift */; };
 		D3A7F35825BF9D23003D8F61 /* StockListViewController+Sort.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A7F35725BF9D23003D8F61 /* StockListViewController+Sort.swift */; };
+		D3A7F36D25BFE89F003D8F61 /* Element.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A7F36C25BFE89F003D8F61 /* Element.swift */; };
 		D3E5847925BC3051008BA41F /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E5847825BC3051008BA41F /* Coordinator.swift */; };
 		D3E5847D25BC3105008BA41F /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E5847C25BC3105008BA41F /* AppCoordinator.swift */; };
 		D3E5848325BC3A40008BA41F /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E5848225BC3A40008BA41F /* UIViewController+Extension.swift */; };
@@ -63,6 +64,7 @@
 		D3A7F35025BEA546003D8F61 /* AddStockCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStockCoordinator.swift; sourceTree = "<group>"; };
 		D3A7F35425BEB87B003D8F61 /* StockDetailCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockDetailCoordinator.swift; sourceTree = "<group>"; };
 		D3A7F35725BF9D23003D8F61 /* StockListViewController+Sort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StockListViewController+Sort.swift"; sourceTree = "<group>"; };
+		D3A7F36C25BFE89F003D8F61 /* Element.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Element.swift; sourceTree = "<group>"; };
 		D3E5847825BC3051008BA41F /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		D3E5847C25BC3105008BA41F /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		D3E5848225BC3A40008BA41F /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -135,6 +137,23 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		D3A7F36925BFE7B2003D8F61 /* AddStockViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D3A7F36B25BFE7BB003D8F61 /* Model */,
+				654B8C9A248058B0003A6024 /* AddStockViewController.swift */,
+			);
+			path = AddStockViewController;
+			sourceTree = "<group>";
+		};
+		D3A7F36B25BFE7BB003D8F61 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D3A7F36C25BFE89F003D8F61 /* Element.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		D3E5847725BC3044008BA41F /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
@@ -188,7 +207,7 @@
 		D3EA566025B9ACC700305E6B /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				654B8C9A248058B0003A6024 /* AddStockViewController.swift */,
+				D3A7F36925BFE7B2003D8F61 /* AddStockViewController */,
 				654B8CA924807D5E003A6024 /* StockDetailViewController.swift */,
 				D3E5849525BC4753008BA41F /* StockListViewController */,
 			);
@@ -297,6 +316,7 @@
 				D3E5847D25BC3105008BA41F /* AppCoordinator.swift in Sources */,
 				654B8CA7248058B0003A6024 /* UpdateLabel.swift in Sources */,
 				D3EA566425B9AD4500305E6B /* Downloader.swift in Sources */,
+				D3A7F36D25BFE89F003D8F61 /* Element.swift in Sources */,
 				D3EA566B25B9B88800305E6B /* APIKey.swift in Sources */,
 				654B8C89248057EA003A6024 /* SceneDelegate.swift in Sources */,
 				654B8CA2248058B0003A6024 /* AddStockViewController.swift in Sources */,

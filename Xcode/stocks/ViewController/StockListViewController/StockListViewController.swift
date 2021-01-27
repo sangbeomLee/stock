@@ -138,15 +138,17 @@ private extension StockListViewController {
     
             var fetchItems = [StockItem]()
             results.forEach { symbol, result in
+                let fetchItem: StockItem
                 switch result {
                 case .success(let quote):
                     // TODO: - myQuote 개선하기
-                    let fetchItem = StockItem(symbol: symbol, quoteModel: quote.quoteModel)
-                    fetchItems.append(fetchItem)
+                    fetchItem = StockItem(symbol: symbol, quoteModel: quote.quoteModel)
                 case .failure(let error):
                     // TODO: - error 처리
+                    fetchItem = StockItem(symbol: symbol, quoteModel: nil)
                     print(error)
                 }
+                fetchItems.append(fetchItem)
             }
             
             self.stockItems = fetchItems
