@@ -169,19 +169,11 @@
 		D3E5848125BC3A1E008BA41F /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				D3E5849425BC46C7008BA41F /* View */,
 				D3E5848225BC3A40008BA41F /* UIViewController+Extension.swift */,
 				D3E5848725BC3A80008BA41F /* UIView+Extension.swift */,
 				65CF81982482CD0C00CE0C77 /* Extension.swift */,
 			);
 			path = Extension;
-			sourceTree = "<group>";
-		};
-		D3E5849425BC46C7008BA41F /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		D3E5849525BC4753008BA41F /* StockListViewController */ = {

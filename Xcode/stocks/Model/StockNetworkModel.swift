@@ -61,9 +61,40 @@ struct StockNetworkModel {
         var pc: Double // previous close
     }
 
-    struct Symbol: Codable {
-        var description: String
-        var symbol: String
+    struct Search: Codable {
+        var result: [Result]
+        
+        struct Result: Codable {
+            var description: String
+            var symbol: String
+        }
+    }
+}
+
+// MARK: - static url func
+extension StockNetworkModel {
+    static func dividendUrl(_ symbol: String?) -> URL? {
+        return url(path: Endpoint.dividend.path, symbol: symbol, numberOfDays: 365)
+    }
+
+    static func executiveUrl(_ symbol: String) -> URL? {
+        return url(path: Endpoint.executive.path, symbol: symbol)
+    }
+
+    static func newsUrl(_ symbol: String?) -> URL? {
+        return url(path: Endpoint.companyNews.path, symbol: symbol, numberOfDays: 14)
+    }
+
+    static func profile2Url(_ symbol: String) -> URL? {
+        return url(path: Endpoint.profile2.path, symbol: symbol)
+    }
+
+    static func quoteUrl(_ symbol: String) -> URL? {
+        return url(path: Endpoint.quote.path, symbol: symbol)
+    }
+
+    static func searchUrl(from text: String) -> URL? {
+        return url(path: Endpoint.search.path, text: text)
     }
 }
 
@@ -75,23 +106,12 @@ extension StockNetworkModel {
         return dateFormatter
     }
 
-    static func getSearchResults(_ query: String, completion: @escaping ([StockNetworkModel.Symbol]?) -> Void) {
-        let url = symbolUrl()
-        url?.get { (results: [StockNetworkModel.Symbol]?) in
-            let lower = query.lowercased()
-            let filtered = results?.compactMap { $0 }.filter { $0.description.lowercased().contains(lower) || $0.symbol.lowercased().contains(lower) }
-            completion(filtered)
-        }
-    }
-
 }
 
 extension StockNetworkModel.Quote {
-
     var quoteModel: QueteModel {
         return QueteModel(price: c, change: c - pc)
     }
-
 }
 
 // TODO: - Detail 쪽은 다시 설계하는것이 좋을 듯 하다.
@@ -103,7 +123,9 @@ private extension StockNetworkModel {
     static let baseUrl = "/api/v1"
 
     enum Endpoint: String {
-        case companyNews, dividend, executive, profile2, quote, symbol
+        case companyNews
+        case search
+        case dividend, executive, profile2, quote
 
         var path: String {
             switch self {
@@ -111,7 +133,9 @@ private extension StockNetworkModel {
                 return "\(baseUrl)/company-news"
             case .quote:
                 return "\(baseUrl)/\(self.rawValue)"
-            case .dividend, .executive, .profile2, .symbol:
+            case .search:
+                return "\(baseUrl)/\(self.rawValue)"
+            case .dividend, .executive, .profile2 :
                 return "\(baseUrl)/stock/\(self.rawValue)"
             }
         }
@@ -139,7 +163,8 @@ private extension StockNetworkModel {
 
         return components.url
     }
-
+    
+    // TODO: - naming
     static func url(path: String, symbol: String?, numberOfDays: TimeInterval? = nil) -> URL?{
         guard let symbol = symbol else { return nil }
 
@@ -162,38 +187,16 @@ private extension StockNetworkModel {
         
         return url(path: path, queryItems: queryItems)
     }
+    
+    static func url(path: String, text: String) -> URL? {
+        var components = baseUrlComponents
+        components.path = Endpoint.search.path
+        
+        let limitQuuery = URLQueryItem(name: "q", value: text)
+        let queryItems = [limitQuuery, tokenQueryItem]
 
-}
-
-extension StockNetworkModel {
-    static func dividendUrl(_ symbol: String?) -> URL? {
-        return url(path: Endpoint.dividend.path, symbol: symbol, numberOfDays: 365)
-    }
-
-    static func executiveUrl(_ symbol: String) -> URL? {
-        return url(path: Endpoint.executive.path, symbol: symbol)
-    }
-
-    static func newsUrl(_ symbol: String?) -> URL? {
-        return url(path: Endpoint.companyNews.path, symbol: symbol, numberOfDays: 14)
-    }
-
-    static func profile2Url(_ symbol: String) -> URL? {
-        return url(path: Endpoint.profile2.path, symbol: symbol)
-    }
-
-    static func quoteUrl(_ symbol: String) -> URL? {
-        return url(path: Endpoint.quote.path, symbol: symbol)
-    }
-
-    static func symbolUrl(_ exchange: String = "US") -> URL? {
-        var c = baseUrlComponents
-        c.path = Endpoint.symbol.path
-
-        let exchangeQi = URLQueryItem(name: "exchange", value: exchange)
-        c.queryItems = [ exchangeQi,tokenQueryItem ]
-
-        let u = c.url
-        return u
+        return url(path: path, queryItems: queryItems)
     }
 }
+
+

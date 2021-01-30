@@ -35,8 +35,25 @@ class StockNetworkManager {
     }
     
     // TODO: - SearchResult 실행하기
-    func fetchSearchResults(_ query: String, completion: @escaping (FetchResult<[StockNetworkModel.Symbol]>) -> Void) {
+    func fetchSearchResults(_ text: String, completion: @escaping (FetchResult<StockNetworkModel.Search>) -> Void) {
+        let url = StockNetworkModel.searchUrl(from: text)
         
+        downloadData(from: url) { (results: FetchResult<StockNetworkModel.Search>) in
+            switch results {
+            case .success(let searchResult):
+                // TODO: - 이름 바꾸고 q= 에 해당하는 것 인자로 넣어주기.
+                // 1. hasPrefix
+                // 2. 정렬
+                // 3. 20개만
+                // CHECK: - 이 부분 경험 정리하자. 기존에는 이렇게~ 되어잇었는데 이렇게~ 바꿨다. 오늘 바로 정리할것
+                // CHECK: - 2만개가 넘는 데이터를 받고있었다.
+                // TODO: - 시이펄~ 2만개가 넘는걸 가져오니까 느리지 쿼리에서 몇개 가져올건지 정하자. 정렬도 거기서하고
+                completion(FetchResult.success(searchResult))
+            case .failure(let error):
+                print(error)
+                completion(FetchResult.failure(error))
+            }
+        }
     }
     
 //    static func symbolUrl(_ exchange: String = "US") -> URL? {
@@ -150,11 +167,6 @@ private extension StockNetworkManager {
         dispatchGroup.notify(queue: .main) {
             completion(FetchResult.success(detailStock))
         }
-    }
-    
-    func getFetchedSearchResult(_ query: String, completion: @escaping (FetchResult<[StockNetworkModel.Symbol]>) -> Void) {
-        let url = StockNetworkModel.symbolUrl()
-        // 새로 짜보자.
     }
     
     func downloadStockDetail<T: Codable>(from url: URL?, dataType: T.Type,completion: @escaping (T?) -> ()) {

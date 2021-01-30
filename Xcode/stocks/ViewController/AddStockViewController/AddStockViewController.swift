@@ -15,16 +15,24 @@ protocol AddStockViewControllerDelegate: AnyObject {
 class AddStockViewController: UIViewController {
     weak var delegate: AddStockViewControllerDelegate?
     weak var coordinator: AddStockCoordinator?
-    
-    var provider: Provider?
 
+    private let storage = StockStorage.shared
     private let tableView = UITableView()
-    private var query: String = ""
+    private var query: String = "" {
+        didSet {
+            if query.isEmpty {
+                elements.removeAll()
+                elements.loadPopularStocks()
+            }
+        }
+    }
 
     private var elements: [Element] = [] {
         didSet {
             // TODO: - 나중에 하나씩 바뀌면 이 부분을 수정 해보자.
-            tableView.reloadData()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
     
@@ -79,12 +87,21 @@ private extension AddStockViewController {
     }
 }
 
+// MARK: - UISearchResultsUpdating
+
 extension AddStockViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard
-            let text = searchController.searchBar.text,
-            text.count > 0 else { return }
-
+        guard let text = searchController.searchBar.text?.uppercased(), !text.isEmpty else {
+            query = ""
+            return
+        }
+        
+        if !query.isEmpty && text.hasPrefix(query) {
+            query = text
+            elements = elements.filter { $0.symbol.hasPrefix(query)}
+            return
+        }
+        
         query = text
 
         /// Credits: https://stackoverflow.com/questions/24330056/how-to-throttle-search-based-on-typing-speed-in-ios-uisearchbar
@@ -92,20 +109,39 @@ extension AddStockViewController: UISearchResultsUpdating {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(loadSearch), object: nil)
         perform(#selector(loadSearch), with: nil, afterDelay: 0.5)
     }
-
+    
+    
 }
 
 private extension AddStockViewController {
 
     @objc
     func loadSearch() {
+        // 데이터를 미리 받앙
         print("load search with \(query)")
+        
+        StockNetworkManager.shared.fetchSearchResults(query) {[weak self] result in
+            // 흠.. 이게 빠르긴 한데 계속 네트워크 통신을 해서 느리다.
+            // 앞에 프리픽스랑 비교해서 네트워크 통신을 덜 할수잇는 방향으로 개선해보자
+            // TODO: - SHould do
+            guard let self = self else { return }
+            switch result {
+            case .success(let search):
+                // TODO: - 이름 고민해보자
+                let searchedResult = search.result
+                let safeData = searchedResult.filter { $0.symbol.hasPrefix((self.query.uppercased())) }
+                                             .sorted { $0.symbol < $1.symbol }
 
-//        provider?.search(query, completion: { (items) in
-//            let section = AddSection(header: "Search", items: items)
-//            self.dataSource = [section]
-//            self.tableView.reloadData()
-//        })
+                var stockList: [Element] = []
+                safeData.forEach { data in
+                    stockList.append(Element(symbol: data.symbol, description: data.description))
+                }
+                
+                self.elements = stockList
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     @objc
@@ -166,11 +202,10 @@ extension AddStockViewController: UITableViewDataSource {
 
 }
 
-private struct AddSection {
-
-    var header: String?
-    var items: [AddItem]?
-
+struct stockListElement {
+    let symbol: String
+    let description: String?
+    let isExisted: Bool
 }
 
 struct AddItem {
